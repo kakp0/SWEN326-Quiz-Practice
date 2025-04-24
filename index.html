@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safety-Critical Systems Quiz - Dark</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="quiz-container" id="quiz-container">
+
+        <div id="start-screen" class="screen active">
+            <h1>Safety-Critical Systems 2025 Test 1</h1>
+            <p>Repeat the Trimester 1 test.</p>
+            <button id="start-btn" class="btn">Start Quiz</button>
+        </div>
+
+        <div id="quiz-screen" class="screen">
+            <div id="hud">
+                <p id="question-counter"></p>
+                <p id="feedback-text"></p>
+            </div>
+            <div id="question-answer-container" class="q-a-container">
+                <h2 id="question-text">Question text goes here</h2>
+                <div id="answer-buttons" class="btn-stack"> </div>
+            </div>
+             <button id="next-btn" class="btn next-btn">Next Question</button>
+        </div>
+
+        <div id="end-screen" class="screen">
+            <h1>Quiz Finished!</h1>
+            <p id="result-text">Your results will be shown here.</p>
+            <div id="results-list" class="results-list">
+                </div>
+            <button id="retry-btn" class="btn">Retry Quiz</button>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

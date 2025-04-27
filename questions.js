@@ -375,7 +375,7 @@ const oldQuizData = [
     {
         question: "The design of safety-critical systems is about handling hazards. Which of the following statements most accurately reflects the role of design?",
         answers: [
-            "The system design must handle hazards as if they were independent of the envi- ronment the system operates in.",
+            "The system design must handle hazards as if they were independent of the environment the system operates in.",
             "All states related to that hazard must be eliminated.",
             "All states related to that hazard must have the potential loss associated with that state mitigated.",
             "All states related to that hazard must either be eliminated or have the potential loss associated with that state mitigated."
@@ -393,11 +393,11 @@ const oldQuizData = [
         correctAnswerIndex: 1 // Index 1 corresponds to option B
     },
     {
-        question: "What does the concept of 'redundancy' imply in the engineering of safety-critical sys- tems?",
+        question: "What does the concept of 'redundancy' imply in the engineering of safety-critical systems?",
         answers: [
             "Duplicate critical components to enhance system availability.",
             "Overdesign the system to increase its complexity.",
-            "Reduce the number of system components to simplify maintenance as some com- ponents are no longer needed.",
+            "Reduce the number of system components to simplify maintenance as some components are no longer needed.",
             "Increase the system's processing power to handle more tasks."
         ],
         correctAnswerIndex: 0 // Index 0 corresponds to option A
@@ -405,7 +405,7 @@ const oldQuizData = [
     {
         question: "In DO178-C, the number of objectives differs depending on the severity classification / level. Which of the following statements is true?",
         answers: [
-            "The number of objectives that teams must be free to independently verify them- selves separate from the accrediting body increases the higher the severity classi- fication / level.",
+            "The number of objectives that teams must be free to independently verify themselves separate from the accrediting body increases the higher the severity classification / level.",
             "At the catastrophic severity classification/level, one of the objectives must be to document how the team intends to keep calm and carry on.",
             "There are five severity classifications in DO178-C.",
             "The number of objectives decreases the higher the severity level, to reflect the fact that the team must focus more."
@@ -423,7 +423,7 @@ const oldQuizData = [
         correctAnswerIndex: 3 // Index 3 corresponds to option D
     },
     {
-        question: "What is the primary purpose of employing 'ALARP' (\"As Low As Reasonably Practi- cable\") in the design of safety-critical systems?",
+        question: "What is the primary purpose of employing 'ALARP' (\"As Low As Reasonably Practicable\") in the design of safety-critical systems?",
         answers: [
             "To ensure that risk are associated with low-level software requirements rather than high-level software requirements.",
             "To balance risk reduction ensuring that costs of risk reduction do not grossly and disproportionately outweigh benefits.",
@@ -448,7 +448,7 @@ const oldQuizData = [
             "To test the physical durability of the hardware.",
             "To meet legal requirements that black boxes be part of all avionics systems for data logging and disaster analysis purposes.",
             "To assess the software's appearance and the usability of the user interface.",
-            "To evaluate the software without being biased by knowledge of its in- ternal workings."
+            "To evaluate the software without being biased by knowledge of its internal workings."
         ],
         correctAnswerIndex: 3 // Index 3 corresponds to option D
     },
@@ -463,12 +463,12 @@ const oldQuizData = [
         correctAnswerIndex: 1 // Index 1 corresponds to option B
     },
     {
-        question: "How does a 'prescriptive standard' differ from a 'performance-based standard' in safety- critical systems?",
+        question: "How does a 'prescriptive standard' differ from a 'performance-based standard' in safety-critical systems?",
         answers: [
             "Prescriptive standards specify exact requirements to be followed in the process; performance-based standards specify the outcomes that need to be achieved.",
-            "Prescriptive standards are based on past performance; performance-based stan- dards outline future goals.",
+            "Prescriptive standards are based on past performance; performance-based standards outline future goals.",
             "There is no significant difference; both terms can be used interchangeably.",
-            "Prescriptive standards apply only to hardware; performance-based standards ap- ply only to software."
+            "Prescriptive standards apply only to hardware; performance-based standards apply only to software."
         ],
         correctAnswerIndex: 0 // Index 0 corresponds to option A
     },
@@ -483,7 +483,7 @@ const oldQuizData = [
         correctAnswerIndex: 0 // Index 0 corresponds to option A
     },
     {
-        question: "Which of the following statements is NOT true about the concept of 'Derived Re- quirements'?",
+        question: "Which of the following statements is NOT true about the concept of 'Derived Requirements'?",
         answers: [
             "They can be requirements that may not be directly traceable to higher level requirements.",
             "They can specify behaviour beyond that specified by the system requirements or higher level requirements.",
@@ -506,7 +506,7 @@ const oldQuizData = [
         question: "Given the critical nature of software updates in safety-critical systems, which of the following approaches would be best for managing and deploying updates that ensures ongoing system safety and integrity?",
         answers: [
             "Updates should be deployed as soon as they are written to ensure immediate benefit.",
-            "Each update must undergo comprehensive regression testing, risk as- sessment, and be certified against relevant safety standards before de- ployment.",
+            "Each update must undergo comprehensive regression testing, risk assessment, and be certified against relevant safety standards before deployment.",
             "Deploy updates only when users request them, to minimise disruption.",
             "Focus solely on security updates, ignoring functional improvements."
         ],
@@ -518,7 +518,7 @@ const oldQuizData = [
             "They can execute the program to identify runtime errors.",
             "They help in optimising the code for better performance.",
             "They can detect errors and defects in the source code without program execution.",
-            "They enhance the user interface aspects of software applications through the anal- ysis of wireframes."
+            "They enhance the user interface aspects of software applications through the analysis of wireframes."
         ],
         correctAnswerIndex: 2 // Index 2 corresponds to option C
     },
@@ -566,9 +566,9 @@ const oldQuizData = [
         question: "Which of the following statements about the DO-178C standard is NOT true?",
         answers: [
             "It requires that software development processes be auditable and reproducible.",
-            "It mandates the use of a small subset of possible programming lan- guages.",
+            "It mandates the use of a small subset of possible programming languages.",
             "It involves demonstrating compliance with software requirements.",
-            "It emphasises the traceability of software requirements through all stages of de- velopment."
+            "It emphasises the traceability of software requirements through all stages of development."
         ],
         correctAnswerIndex: 1 // Index 1 corresponds to option B
     },
@@ -620,7 +620,7 @@ const oldQuizDataTwo = [
         answers: [
             "All states related to that hazard must have the potential loss associated with that state mitigated.",
             "All states related to that hazard must either be eliminated or have the potential loss associated with that state mitigated.", // Correct based on PDF
-            "The system design must handle hazards as if they were independent of the envi- ronment the system operates in.",
+            "The system design must handle hazards as if they were independent of the environment the system operates in.",
             "All states related to that hazard must be eliminated."
         ],
         correctAnswerIndex: 1 // Index 1 corresponds to option B
@@ -631,7 +631,7 @@ const oldQuizDataTwo = [
             "It ensures system performance optimisation.",
             "It guarantees faster system response times as there are more components working than you minimally need.",
             "It provides a backup in case of system component failure.", // Correct based on PDF
-            "It reduces the overall cost of the system as components identified as redundant can be removed in the design phase before the team has to pay the cost of imple- mentation."
+            "It reduces the overall cost of the system as components identified as redundant can be removed in the design phase before the team has to pay the cost of implementation."
         ],
         correctAnswerIndex: 2 // Index 2 corresponds to option C
     },
@@ -641,7 +641,7 @@ const oldQuizDataTwo = [
             "Catastrophic consequences deal with loss of a single life.",
             "Critical consequences with improbable likelihoods are acceptable as they stand, though need to be monitored.",
             "Critical consequences deal with the loss of a single life.",
-            "Catastrophic consequences that have an incredible likelihood of occurring are un- acceptable in any circumstance." // Correct based on PDF
+            "Catastrophic consequences that have an incredible likelihood of occurring are unacceptable in any circumstance." // Correct based on PDF
         ],
         correctAnswerIndex: 2 // Index 2 changed corresponds to option C
     },
@@ -650,7 +650,7 @@ const oldQuizDataTwo = [
         answers: [
             "It is about the team outwardly projecting confidence to end users that they are safe so as to avoid stoking fear.",
             "It provides confidence that the costs of hazards can be adequately covered by those liable.",
-            "It provides some kind of measurement to predict the quantity and nature of acci- dents that will occur.",
+            "It provides some kind of measurement to predict the quantity and nature of accidents that will occur.",
             "It provides confidence that hazards have been eliminated or controlled." // Correct based on PDF
         ],
         correctAnswerIndex: 3 // Index 3 corresponds to option D
@@ -669,7 +669,7 @@ const oldQuizDataTwo = [
         question: "In DO178-C, the number of objectives differs depending on the severity classification /level. Which of the following statements is true?",
         answers: [
             "The number of objectives decreases the higher the severity level, to reflect the fact that the team must focus more.",
-            "The number of objectives that teams must be free to independently verify them- selves separate from the accrediting body increases the higher the severity classi- fication / level.", // Correct based on PDF
+            "The number of objectives that teams must be free to independently verify themselves separate from the accrediting body increases the higher the severity classification / level.", // Correct based on PDF
             "At the catastrophic severity classification/level, one of the objectives must be to document how the team intends to keep calm and carry on.",
             "There are five severity classifications in DO178-C."
         ],
@@ -701,7 +701,7 @@ const oldQuizDataTwo = [
             "To test the physical durability of the hardware.",
             "To meet legal requirements that black boxes be part of all avionics systems for data logging and disaster analysis purposes.",
             "To assess the software's appearance and the usability of the user interface.",
-            "To evaluate the software without being biased by knowledge of its in- ternal workings." // Correct based on PDF
+            "To evaluate the software without being biased by knowledge of its internal workings." // Correct based on PDF
         ],
         correctAnswerIndex: 3 // Index 3 corresponds to option D
     },
@@ -716,12 +716,12 @@ const oldQuizDataTwo = [
         correctAnswerIndex: 2 // Index 2 corresponds to option C
     },
     {
-        question: "How does a 'prescriptive standard' differ from a 'performance-based standard' in safety- critical systems?",
+        question: "How does a 'prescriptive standard' differ from a 'performance-based standard' in safety-critical systems?",
         answers: [
             "There is no significant difference; both terms can be used interchangeably.",
-            "Prescriptive standards apply only to hardware; performance-based standards ap- ply only to software.",
+            "Prescriptive standards apply only to hardware; performance-based standards apply only to software.",
             "Prescriptive standards specify exact requirements to be followed in the process; performance-based standards specify the outcomes that need to be achieved.", // Correct based on PDF
-            "Prescriptive standards are based on past performance; performance-based stan- dards outline future goals."
+            "Prescriptive standards are based on past performance; performance-based standards outline future goals."
         ],
         correctAnswerIndex: 2 // Index 2 corresponds to option C
     },
@@ -738,7 +738,7 @@ const oldQuizDataTwo = [
     {
         question: "Given the critical nature of software updates in safety-critical systems, which of the following approaches would be best for managing and deploying updates that ensures ongoing system safety and integrity?",
         answers: [
-            "Each update must undergo comprehensive regression testing, risk as- sessment, and be certified against relevant safety standards before de- ployment.", // Correct based on PDF
+            "Each update must undergo comprehensive regression testing, risk assessment, and be certified against relevant safety standards before deployment.", // Correct based on PDF
             "Updates should be deployed as soon as they are written to ensure immediate benefit.",
             "Focus solely on security updates, ignoring functional improvements.",
             "Deploy updates only when users request them, to minimise disruption."
@@ -751,7 +751,7 @@ const oldQuizDataTwo = [
             "They help in optimising the code for better performance.",
             "They can detect errors and defects in the source code without program execution.", // Correct based on PDF
             "They can execute the program to identify runtime errors.",
-            "They enhance the user interface aspects of software applications through the anal- ysis of wireframes."
+            "They enhance the user interface aspects of software applications through the analysis of wireframes."
         ],
         correctAnswerIndex: 1 // Index 1 corresponds to option B
     },
@@ -836,10 +836,10 @@ const oldQuizDataTwo = [
         correctAnswerIndex: 1 // Index 1 corresponds to option B
     },
     {
-        question: "Which of the following statements is true about the role of software testing in safety- critical systems?",
+        question: "Which of the following statements is true about the role of software testing in safety-critical systems?",
         answers: [
             "Software testing is required by DO178-C, but not by IEC-61508.",
-            "Software testing is necessary but not sufficient to demonstrate the sys- tem is safe.", // Correct based on PDF
+            "Software testing is necessary but not sufficient to demonstrate the system is safe.", // Correct based on PDF
             "Software testing is best done by the developers as they will know which execution paths to avoid.",
             "Software testing should avoid using regression testing as progression testing is more forward thinking."
         ],
@@ -885,7 +885,7 @@ const oldQuizDataThree = [
             "It ensures system performance optimisation.",
             "It guarantees faster system response times as there are more components working than you minimally need.",
             "It provides a backup in case of system component failure.", // Correct based on PDF
-            "It reduces the overall cost of the system as components identified as redundant can be removed in the design phase before the team has to pay the cost of imple- mentation."
+            "It reduces the overall cost of the system as components identified as redundant can be removed in the design phase before the team has to pay the cost of implementation."
         ],
         correctAnswerIndex: 2 // Index 2 corresponds to option C
     },
@@ -904,7 +904,7 @@ const oldQuizDataThree = [
         answers: [
             "All states related to that hazard must have the potential loss associated with that state mitigated.",
             "All states related to that hazard must either be eliminated or have the potential loss associated with that state mitigated.", // Correct based on PDF
-            "The system design must handle hazards as if they were independent of the envi- ronment the system operates in.",
+            "The system design must handle hazards as if they were independent of the environment the system operates in.",
             "All states related to that hazard must be eliminated."
         ],
         correctAnswerIndex: 1 // Index 1 corresponds to option B
@@ -922,7 +922,7 @@ const oldQuizDataThree = [
     {
         question: "In DO178-C, the number of objectives differs depending on the severity classification / level. Which of the following statements is true?",
         answers: [
-            "The number of objectives that teams must use an independent author- ity external to themselves to verify increases the higher the severity classification / level.", // Correct based on PDF
+            "The number of objectives that teams must use an independent authority external to themselves to verify increases the higher the severity classification / level.", // Correct based on PDF
             "The number of objectives decreases the higher the severity level, to reflect the fact that the team can't be expected to cope with higher stress and more complexity.",
             "At the catastrophic severity classification/level, one of the objectives must be to document how the team intends to avoid unnecessary panic.",
             "There are eight severity classifications in DO178-C."
@@ -953,7 +953,7 @@ const oldQuizDataThree = [
         question: "Which of the following statements is true about 'white-box' testing methods used in safety-critical software development?",
         answers: [
             "Where as 'black box testing' involves using requirements to create new test cases, 'white-box' testing is about using test cases to create new requirements.",
-            "'White-box testing' allows developers to verify and test the internal workings of the system in a way that 'black box testing' does not sup- port.", // Correct based on PDF
+            "'White-box testing' allows developers to verify and test the internal workings of the system in a way that 'black box testing' does not support.", // Correct based on PDF
             "Unlike 'black-box testing', 'white-box testing' is not a requirement for avionics systems as only black boxes are installed on aircraft.",
             "It's done after all bugs have been found and resolved, as a final sanity check to ensure nothing has been missed."
         ],
@@ -970,7 +970,7 @@ const oldQuizDataThree = [
         correctAnswerIndex: 1 // Index 1 corresponds to option B
     },
     {
-        question: "Which of the following statements is NOT true about the concept of 'Derived Re- quirements'?",
+        question: "Which of the following statements is NOT true about the concept of 'Derived Requirements'?",
         answers: [
             "They can be requirements that may not be directly traceable to higher level requirements.",
             "They can specify behaviour beyond that specified by the system requirements or higher level requirements.",
@@ -993,7 +993,7 @@ const oldQuizDataThree = [
         question: "Given the critical nature of software updates in safety-critical systems, which of the following approaches would be best for managing and deploying updates that ensures ongoing system safety and integrity?",
         answers: [
             "Focus solely on security updates, ignoring functional improvements.",
-            "Each update must undergo comprehensive regression testing, risk as- sessment, and be certified against relevant safety standards before de- ployment.", // Correct based on PDF
+            "Each update must undergo comprehensive regression testing, risk assessment, and be certified against relevant safety standards before deployment.", // Correct based on PDF
             "Updates should be deployed as soon as they are written to ensure immediate benefit.",
             "Deploy updates only when users request them, to minimise disruption."
         ],
@@ -1005,12 +1005,12 @@ const oldQuizDataThree = [
             "They help in optimising the code for better performance.",
             "They can detect errors and defects in the source code without program execution.", // Correct based on PDF
             "They can execute the program to identify runtime errors.",
-            "They enhance the user interface aspects of software applications through the anal- ysis of wireframes."
+            "They enhance the user interface aspects of software applications through the analysis of wireframes."
         ],
         correctAnswerIndex: 1 // Index 1 corresponds to option B
     },
     {
-        question: "What is the primary purpose of employing 'ALARP' (\"As Low As Reasonably Practi- cable\") in the design of safety-critical systems?",
+        question: "What is the primary purpose of employing 'ALARP' (\"As Low As Reasonably Practicable\") in the design of safety-critical systems?",
         answers: [
             "To ensure that risk are associated with low-level software requirements rather than high-level software requirements.",
             "To completely eliminate all risks in the system.",
@@ -1034,7 +1034,7 @@ const oldQuizDataThree = [
         answers: [
             "It is about the team outwardly projecting confidence to end users that they are safe so as to avoid stoking fear.",
             "It provides confidence that the costs of hazards can be adequately covered by those liable.",
-            "It provides some kind of measurement to predict the quantity and nature of acci- dents that will occur.",
+            "It provides some kind of measurement to predict the quantity and nature of accidents that will occur.",
             "It provides confidence that hazards have been eliminated or controlled." // Correct based on PDF
         ],
         correctAnswerIndex: 3 // Index 3 corresponds to option D
@@ -1063,7 +1063,7 @@ const oldQuizDataThree = [
         question: "Which of the following is NOT an example of 'Functional Safety'?",
         answers: [
             "A physical fixed guard on a device that stops someone from placing their eye in the direct line of a laser beam.", // Correct based on PDF
-            "A sensor that stops a spinning blade if someone's hand is detected in close prox- imity.",
+            "A sensor that stops a spinning blade if someone's hand is detected in close proximity.",
             "Collision detection sensors and alerts on a grounded aircraft that stop the aircraft (assume wheels down and on the tarmac).",
             "A barrier that is automatically lowered over a train crossing to stop cars and pedestrians from crossing train tracks when a train's approach is detected."
         ],
@@ -1090,7 +1090,7 @@ const oldQuizDataThree = [
         correctAnswerIndex: 3 // Index 3 corresponds to option D
     },
     {
-        question: "Which of the following statements is true about the role of software testing in safety- critical systems?",
+        question: "Which of the following statements is true about the role of software testing in safety-critical systems?",
         answers: [
             "Software testing should avoid generating some test cases based on the code as this introduces bias.",
             "A plan for software testing should be generated after coding has substantially finished, as otherwise the plan will necessarily be incomplete or out of date.",

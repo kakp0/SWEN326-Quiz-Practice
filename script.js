@@ -30,7 +30,6 @@ const HEIGHT_TRANSITION_DURATION = 400; // Match the max-height transition in CS
 //   correctAnswerIndex: 1 // Index of the correct answer in the 'answers' array
 // }
 
-// --- Original Raw Data (for conversion) ---
 const quizData = [
     {
         question: "In terms of the definition of what is a safety-critical system in an engineering context, which of the following is the best description?",
@@ -327,10 +326,10 @@ const quizData = [
         answers: [
             "The key focus of traceability is being able to trace from high-level requirements to low-level requirements.",
             "Low-level requirements have a lot of similarities with software design.",
-            "Derived requirements may lead to the creation of new high-level requirements.", // This is the NOT true statement - derived requirements typically refine existing requirements or add details, they don't create entirely new high-level ones.
+            "Derived requirements may lead to the creation of new high-level requirements.", 
             "Testing engineers should have input into the requirements as they may provide a different perspective on edge cases."
         ],
-        correctAnswerIndex: 2 // Index 2 corresponds to 'c' (the one that is NOT true)
+        correctAnswerIndex: 0 // Index 2 corresponds to 'a' (the one that is NOT true)
     },
     {
         question: "You are working for a major aircraft manufacturer, and have been told that the new variant of a previously successfully line of aircraft now has an issue as the engines have been made larger to be more efficient. The larger engines cause the aircraft to raise its nose due to the different aerodynamics of those new engines. You have been tasked with writing software that will correct this, based on a sensor that will send your software the angle of attack data. As a software engineer working on this safety-critical project, your correct cause of action is to:",
@@ -383,32 +382,6 @@ const quizData = [
         correctAnswerIndex: 2 // Index 2 corresponds to 'c'
     }
 ];
-
-// --- Convert Raw Data to New Question Object Format ---
-const quizData = Object.keys(quizDataRaw).map((question, index) => {
-    const optionsRaw = quizDataRaw[question].split('|');
-    // Clean up options (remove trailing commas, trim whitespace)
-    const optionsCleaned = optionsRaw.map(opt => opt.trim().replace(/,$/, ''));
-
-    // Determine the correct answer index based on the letter in answerList
-    const correctAnswerLetter = answerList[index].toLowerCase(); // e.g., 'b'
-    let correctAnswerIndex = -1;
-    // Find the index corresponding to the letter (A=0, B=1, etc.)
-    correctAnswerIndex = correctAnswerLetter.charCodeAt(0) - 'a'.charCodeAt(0);
-
-    // Validate index (optional but good practice)
-    if (correctAnswerIndex < 0 || correctAnswerIndex >= optionsCleaned.length) {
-        console.error(`Invalid correct answer letter '${correctAnswerLetter}' or index for question: ${question}`);
-        // Handle error appropriately, maybe default to 0 or skip question
-        correctAnswerIndex = 0;
-    }
-
-    return {
-        question: question.trim(),
-        answers: optionsCleaned, // Use the cleaned array of answer strings
-        correctAnswerIndex: correctAnswerIndex // Store the 0-based index
-    };
-});
 
 // --- Quiz State Variables ---
 let shuffledQuestions = [];

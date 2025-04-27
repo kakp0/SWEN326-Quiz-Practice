@@ -37,6 +37,18 @@ body {
     100% { background-position: 0% 50%, 50% 0%, 0% 0%; }
 }
 
+/* --- NEW: Keyframes for Rainbow Glow Cycle --- */
+@keyframes rainbowGlowCycle {
+  0%   { text-shadow: 0 0 5px rgba(255, 255, 255, 0.6), 0 0 10px #ff3030, 0 0 15px #ff3030, 0 0 20px #ff3030; } /* Red */
+  16%  { text-shadow: 0 0 5px rgba(255, 255, 255, 0.6), 0 0 10px #ffae30, 0 0 15px #ffae30, 0 0 20px #ffae30; } /* Orange */
+  33%  { text-shadow: 0 0 5px rgba(255, 255, 255, 0.6), 0 0 10px #ffff30, 0 0 15px #ffff30, 0 0 20px #ffff30; } /* Yellow */
+  50%  { text-shadow: 0 0 5px rgba(255, 255, 255, 0.6), 0 0 10px #30ff30, 0 0 15px #30ff30, 0 0 20px #30ff30; } /* Green */
+  66%  { text-shadow: 0 0 5px rgba(255, 255, 255, 0.6), 0 0 10px #30ffff, 0 0 15px #30ffff, 0 0 20px #30ffff; } /* Cyan */
+  83%  { text-shadow: 0 0 5px rgba(255, 255, 255, 0.6), 0 0 10px #3030ff, 0 0 15px #3030ff, 0 0 20px #3030ff; } /* Blue */
+  100% { text-shadow: 0 0 5px rgba(255, 255, 255, 0.6), 0 0 10px #ff30ff, 0 0 15px #ff30ff, 0 0 20px #ff30ff; } /* Magenta/Violet */
+}
+/* --- End New Keyframes --- */
+
 /* Main Layout Container */
 .main-layout-container {
     display: flex;
@@ -55,7 +67,7 @@ body {
     border: 1px solid #333;
     border-radius: 15px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-    position: relative;
+    position: relative; /* Needed for absolute positioning inside */
     z-index: 1;
     transition: max-height 0.4s ease-in-out, min-height 0.4s ease-in-out, padding 0.3s ease-out, width 0.3s ease-out;
     overflow: hidden;
@@ -74,12 +86,41 @@ body {
     min-height: 300px;
 }
 
-/* Specific Sizing for High Score Area */
+/* Specific Sizing and POSITIONING for High Score Area (Desktop) */
+@media (min-width: 1571px) {
+    #high-scores-area {
+        position: fixed;       /* Position relative to the viewport */
+        top: 50%;              /* Position top edge at the vertical midpoint */
+        right: 10%;            /* Distance from the right edge */
+        transform: translateY(-50%); /* Center vertically */
+        width: 100%;
+        max-width: 300px;
+        text-align: left;
+        z-index: 10;
+        display: block !important; /* Always visible on large screens */
+        min-height: 300px; /* Match quiz container */
+    }
+
+    /* Hide the mobile toggle container on large screens */
+    .mobile-toggle-container {
+        display: none !important;
+    }
+
+    /* Ensure default visibility for large screens */
+     body.scoreboard-visible-mobile #quiz-container,
+     body.menu-visible-mobile #quiz-container,
+     body.scoreboard-visible-mobile #high-scores-area,
+     body.menu-visible-mobile #high-scores-area {
+        display: block !important;
+     }
+}
+
+/* Specific Sizing for High Score Area (Fallback/Mobile - Modified later) */
 #high-scores-area {
     width: 100%;
-    max-width: 300px; /* Adjust if needed */
-    text-align: left; /* Keep text left-aligned */
-    min-height: 300px; /* Match quiz container's min-height if desired */
+    max-width: 300px;
+    text-align: left;
+    min-height: 300px;
 }
 
 
@@ -109,10 +150,10 @@ body {
 
 /* --- High Score Panel Specific Styling --- */
 #high-scores-area h2 {
-    color: #f5f5f5; /* Match question text color */
-    font-size: calc(1.4em * var(--font-scale-factor)); /* Match question text size */
-    margin-bottom: calc(25px * var(--font-scale-factor)); /* Match question text margin */
-    text-align: center; /* Center the "High Scores" title */
+    color: #f5f5f5;
+    font-size: calc(1.4em * var(--font-scale-factor));
+    margin-bottom: calc(25px * var(--font-scale-factor));
+    text-align: center;
     border-bottom: 1px solid #444;
     padding-bottom: calc(12px * var(--font-scale-factor));
     transition: font-size 0.3s ease-out, margin-bottom 0.3s ease-out, padding-bottom 0.3s ease-out, color 0.3s ease-out;
@@ -122,17 +163,16 @@ body {
 .high-score-entry {
     display: flex; flex-direction: column; align-items: center;
     padding: calc(12px * var(--font-scale-factor)) 0;
-    margin-bottom: calc(20px * var(--font-scale-factor)); /* Keep some margin */
-    font-size: calc(1em * var(--font-scale-factor)); /* Scale with container */
+    margin-bottom: calc(20px * var(--font-scale-factor));
+    font-size: calc(1em * var(--font-scale-factor));
     color: #ccc;
-    /* REMOVE dotted border */
-    border-bottom: none; /* Changed from 1px dashed #444; */
+    border-bottom: none; /* No border between entries */
     transition: padding 0.3s ease-out, margin-bottom 0.3s ease-out, font-size 0.3s ease-out;
 }
 .high-score-entry:last-child { border-bottom: none; margin-bottom: 0; }
 
 .high-score-entry .test-title {
-    font-size: calc(1.1em * var(--font-scale-factor)); /* Scale title */
+    font-size: calc(1.1em * var(--font-scale-factor));
     font-weight: bold; color: #ddd;
     margin-bottom: calc(10px * var(--font-scale-factor));
     transition: font-size 0.3s ease-out, margin-bottom 0.3s ease-out;
@@ -140,76 +180,98 @@ body {
 
 .high-score-entry .score-details { display: flex; flex-direction: column; align-items: center; width: 100%; }
 
-/* --- General Star Rating Styling --- */
-/* Applied via class, so it's consistent */
+/* --- Star Rating Styling --- */
 .stars-container {
-    display: inline-block; position: relative;
+    display: inline-block;
+    position: relative; /* Crucial for foreground positioning */
     line-height: 1; vertical-align: middle;
-    margin: calc(8px * var(--font-scale-factor)) 0; /* Use standard margin */
-    /* Base size uses the container's scale factor */
-    /* Increased base size slightly */
-    --star-base-size: calc(2.8em * var(--font-scale-factor)); /* Increased from 2.5em */
-    --star-mid-scale: 1.15; /* Keep the same scale for the middle star */
+    margin: calc(8px * var(--font-scale-factor)) 0;
+    --star-base-size: calc(2.8em * var(--font-scale-factor));
+    --star-mid-scale: 1.15;
     --star-empty-color: rgba(255, 255, 255, 0.15);
     --star-fill-color: gold;
-    --star-glow-color-rgb: 255, 215, 0;
-    transition: font-size 0.3s ease-out, margin 0.3s ease-out; /* Added margin transition */
+    --star-glow-color-rgb: 255, 215, 0; /* Gold glow */
+    transition: font-size 0.3s ease-out, margin 0.3s ease-out;
 }
 
-/* --- REMOVE Overrides for Star Size in High Score Panel ---
-   We want it to use the general style above now.
-#high-scores-area .stars-container {
-    --star-base-size: calc(3.5em * var(--font-scale-factor)); // Removed
-    margin: calc(15px * var(--font-scale-factor)) 0; // Removed, use default
+.stars-background, .stars-foreground {
+    display: block; /* Ensure they stack */
+    white-space: nowrap;
 }
-*/
 
-.stars-background, .stars-foreground { display: block; white-space: nowrap; }
-.stars-background { color: var(--star-empty-color); }
+.stars-background {
+    color: var(--star-empty-color);
+    /* Background stars have no text-shadow by default */
+}
+
 .stars-foreground {
-    position: absolute; top: 0; left: 0;
-    color: var(--star-fill-color);
-    overflow: hidden; width: 0%; /* Set by JS */
+    position: absolute; /* MUST be absolute */
+    top: 0;
+    left: 0;
+    color: var(--star-fill-color); /* Gold fill */
+    overflow: hidden;
+    width: 0%; /* Set by JS */
     transition: width 0.4s ease-out, color 0.4s ease-out;
 }
 
+/* Individual star styling (applies to both layers initially) */
 .stars-container .star {
     display: inline-block;
     font-size: var(--star-base-size);
-    text-shadow: none;
-    transition: transform 0.3s ease-out, text-shadow 0.4s ease-out;
+    text-shadow: none; /* Base state has no shadow */
+    transition: transform 0.3s ease-out, text-shadow 0.4s ease-out, color 0.4s ease-out;
     font-family: 'Segoe UI Symbol', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
-    padding: 0 1px;
+    padding: 0 1px; /* Prevent clipping */
 }
 
-/* Glow style applied by JS */
-.stars-container .star.glow {
+/* Default Gold Glow (Applied via JS to FOREGROUND stars) */
+.stars-container .stars-foreground .star.glow {
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.6),
                  0 0 10px rgba(var(--star-glow-color-rgb), 0.9),
                  0 0 15px rgba(var(--star-glow-color-rgb), 0.7);
 }
 
-/* Angry Birds Style - Middle star bigger */
-.stars-container .star-2 {
+/* Middle star bigger (Applies to both layers) */
+.stars-container .star.star-2 {
     font-size: calc(var(--star-base-size) * var(--star-mid-scale));
     transform: translateY(calc(-0.05 * var(--star-base-size)));
 }
 
-/* Rainbow effect for 100% */
+/* --- Rainbow effect modifications --- */
+
+/* Remove the rainbow gradient fill from the foreground star text */
 .stars-container.rainbow-stars .stars-foreground {
+    /* Keep the gold fill color, don't override with gradient */
+    color: var(--star-fill-color);
+    /* Ensure width is still set correctly */
+    /* background: none; */ /* Ensure no background overrides */
+    /* -webkit-background-clip: initial; background-clip: initial; */ /* Reset clipping */
+}
+
+/* Apply Rainbow Glow Animation to BACKGROUND Stars */
+.stars-container.rainbow-stars .stars-background .star {
+    /* Apply the glow animation */
+    animation: rainbowGlowCycle 4s linear infinite alternate; /* Use alternate direction */
+    /* Make background star glyph transparent, only shadow is visible */
     color: transparent;
-    background: linear-gradient(to right, #ff3030, #ffae30, #ffff30, #30ff30, #30ffff, #3030ff, #ae30ff);
-    -webkit-background-clip: text; background-clip: text;
 }
-.stars-container.rainbow-stars .stars-foreground .star.glow {
-     text-shadow: 0 0 8px rgba(255, 255, 255, 0.9),
-                  0 0 15px rgba(255, 255, 255, 0.7);
+
+
+/* Apply Rainbow Fill Animation to FOREGROUND Stars (Looped Alternating) */
+.stars-container.rainbow-stars .stars-foreground .star {
+    /* Apply the fill color animation */
+    animation: rainbowFillCycle 4s linear infinite alternate; /* Use alternate direction */
+    /* Remove any text shadow */
+    text-shadow: none !important;
+    /* Ensure no other animation conflicts */
+    /* animation: rainbowFillCycle 4s linear infinite alternate !important; */ /* Explicitly set animation */
 }
+
 /* --- End Star Styling --- */
 
 
 .high-score-entry .score-total-grade {
-    font-size: calc(1em * var(--font-scale-factor)); /* Scale with container */
+    font-size: calc(1em * var(--font-scale-factor));
     color: #fff;
     margin-top: calc(10px * var(--font-scale-factor));
     text-align: center;
@@ -217,8 +279,7 @@ body {
 }
 .high-score-entry .score-text, .high-score-entry .grade-text { font-weight: normal; color: inherit; }
 
-/* --- Rest of the styles (buttons, quiz elements, etc. inside .quiz-container) --- */
-/* (These remain largely the same, using quiz-container's scale factor) */
+/* --- Rest of the styles (buttons, quiz elements, etc.) --- */
 
 h1 {
     color: #ffffff;
@@ -270,7 +331,7 @@ h2#question-text.text-fade-in { opacity: 1; }
 }
 .btn:hover:not(.disabled):not(.correct):not(.incorrect) { background-color: #444; border-color: #777; transform: translateY(-2px); }
 .btn:active:not(.disabled) { transform: translateY(0); }
-.btn.disabled { pointer-events: none; cursor: default; }
+.btn.disabled { pointer-events: none; cursor: default; opacity: 0.6; /* Added default disabled opacity */ }
 
 .next-btn { /* Specific to next button inside quiz-screen */
     display: inline-block; width: auto;
@@ -281,7 +342,7 @@ h2#question-text.text-fade-in { opacity: 1; }
     transition: opacity 0.4s ease-out, visibility 0.4s step-end, margin-top 0.3s ease-out, margin-bottom 0.3s ease-out;
 }
 
-/* Unified Button Styles (Start/Retry/Back) */
+/* Unified Button Styles (Start/Retry/Back/Mobile) */
 #show-scoreboard-btn, #back-to-menu-btn, #start-full-btn, #start-2025-btn, #start-2024-btn, #retry-btn, #back-to-start-btn, #next-btn {
     background-color: #F9F6EE; color: #333; border: 1px solid #DCDCDC;
     padding: calc(12px * var(--font-scale-factor)) calc(30px * var(--font-scale-factor));
@@ -293,18 +354,34 @@ h2#question-text.text-fade-in { opacity: 1; }
     cursor: pointer; border-color: #DCDCDC;
 }
 /* Hover, Active, Disabled States for Unified Buttons */
-#start-full-btn:hover:not(.disabled), #start-2025-btn:hover:not(.disabled), #start-2024-btn:hover:not(.disabled), #retry-btn:hover:not(.disabled), #back-to-start-btn:hover:not(.disabled), #next-btn:hover:not(.disabled) { background-color: #E8E4D9; border-color: #C0C0C0; color: #111; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); transform: translateY(-1px); }
-#start-full-btn:active:not(.disabled), #start-2025-btn:active:not(.disabled), #start-2024-btn:active:not(.disabled), #retry-btn:active:not(.disabled), #back-to-start-btn:active:not(.disabled), #next-btn:active:not(.disabled) { background-color: #DCDCDC; border-color: #A9A9A9; transform: translateY(0px); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
-#start-full-btn.disabled, #start-2025-btn.disabled, #start-2024-btn.disabled, #retry-btn.disabled, #back-to-start-btn.disabled, #next-btn.disabled { background-color: #EAEAEA !important; color: #999 !important; border-color: #DCDCDC !important; box-shadow: none !important; transform: none !important; pointer-events: none; cursor: default; opacity: 0.65 !important; }
+#show-scoreboard-btn:hover:not(.disabled), #back-to-menu-btn:hover:not(.disabled), #start-full-btn:hover:not(.disabled), #start-2025-btn:hover:not(.disabled), #start-2024-btn:hover:not(.disabled), #retry-btn:hover:not(.disabled), #back-to-start-btn:hover:not(.disabled), #next-btn:hover:not(.disabled) { background-color: #E8E4D9; border-color: #C0C0C0; color: #111; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); transform: translateY(-1px); }
+#show-scoreboard-btn:active:not(.disabled), #back-to-menu-btn:active:not(.disabled), #start-full-btn:active:not(.disabled), #start-2025-btn:active:not(.disabled), #start-2024-btn:active:not(.disabled), #retry-btn:active:not(.disabled), #back-to-start-btn:active:not(.disabled), #next-btn:active:not(.disabled) { background-color: #DCDCDC; border-color: #A9A9A9; transform: translateY(0px); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
+#show-scoreboard-btn.disabled, #back-to-menu-btn.disabled, #start-full-btn.disabled, #start-2025-btn.disabled, #start-2024-btn.disabled, #retry-btn.disabled, #back-to-start-btn.disabled, #next-btn.disabled { background-color: #EAEAEA !important; color: #999 !important; border-color: #DCDCDC !important; box-shadow: none !important; transform: none !important; pointer-events: none; cursor: default; opacity: 0.65 !important; }
 
 /* Next Button Visibility */
 #next-btn { opacity: 0; visibility: hidden; pointer-events: none; }
 #next-btn.visible { opacity: 1; visibility: visible; pointer-events: auto; transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out, opacity 0.4s ease-out, visibility 0s; }
 
-/* Button Feedback Styles & Animations */
+/* Button Feedback Styles & Animations (Answer buttons) */
 .btn.correct { background-color: #28a745 !important; border-color: #1e7e34 !important; color: white !important; animation: pulse 0.5s; opacity: 1 !important; }
 .btn.incorrect { background-color: #dc3545 !important; border-color: #bd2130 !important; color: white !important; animation: shake 0.5s; opacity: 1 !important; }
 @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
+
+
+
+/* --- NEW: Keyframes for Rainbow Fill Cycle --- */
+@keyframes rainbowFillCycle {
+  0%   { color: #ff3030; } /* Red */
+  16%  { color: #ffae30; } /* Orange */
+  33%  { color: #ffff30; } /* Yellow */
+  50%  { color: #30ff30; } /* Green */
+  66%  { color: #30ffff; } /* Cyan */
+  83%  { color: #3030ff; } /* Blue */
+  100% { color: #ff30ff; } /* Magenta/Violet */
+}
+/* --- End New Keyframes --- */
+
+
 @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } }
 
 #hud { /* Inside quiz-screen */
@@ -315,9 +392,9 @@ h2#question-text.text-fade-in { opacity: 1; }
     transition: font-size 0.3s ease-out, margin-bottom 0.3s ease-out, padding 0.3s ease-out, min-height 0.3s ease-out;
 }
 #hud p { margin-bottom: 0; padding-top: calc(2px * var(--font-scale-factor)); padding-bottom: calc(2px * var(--font-scale-factor)); line-height: 1.2; font-size: inherit; transition: padding 0.3s ease-out; }
-#feedback-text { font-weight: bold; font-size: calc(1.1em * var(--font-scale-factor)); text-align: right; transition: opacity 0.3s ease-in-out, font-size 0.3s ease-out; }
-#feedback-text.correct { color: #2ecc71; }
-#feedback-text.incorrect { color: #e74c3c; }
+#feedback-text { font-weight: bold; font-size: calc(1.1em * var(--font-scale-factor)); text-align: right; transition: opacity 0.3s ease-in-out, font-size 0.3s ease-out, color 0.3s ease-out; }
+#feedback-text.correct { color: #2ecc71; opacity: 1; }
+#feedback-text.incorrect { color: #e74c3c; opacity: 1; }
 
 .hidden { display: none !important; }
 
@@ -352,162 +429,65 @@ h2#question-text.text-fade-in { opacity: 1; }
 }
 
 
-/* --- Responsive Adjustments --- */
-@media (max-width: 950px) { /* Breakpoint where side-by-side becomes too tight */
-    .main-layout-container {
-        flex-direction: column; /* Stack vertically */
-        align-items: center; /* Center items horizontally when stacked */
-        gap: 30px;
-        max-width: 700px;
-    }
-    .quiz-container {
-        max-width: 100%;
-        order: 1; /* Quiz first */
-        flex-basis: auto;
-    }
-    #high-scores-area {
-        max-width: 450px; /* Allow score area to be wider when stacked */
-        width: 90%;
-        order: 2; /* Score panel below quiz */
-        margin-bottom: 20px;
-        flex-basis: auto;
-        /* Now uses same padding as quiz-container, adjusts with scale factor */
-    }
-}
-
-@media (max-width: 600px) {
-    body {
-        padding: 10px;
-    }
-    .main-layout-container {
-        max-width: 100%;
-        gap: 20px;
-    }
-    .quiz-container,
-    #high-scores-area { /* Apply reduced padding to both */
-        padding: calc(20px * var(--font-scale-factor)) calc(20px * var(--font-scale-factor));
-        min-height: 250px; /* Adjust min height */
-    }
-     #high-scores-area {
-        max-width: 100%;
-        width: 95%;
-    }
-
-    /* Font sizes inside high-scores-area will now scale via the var */
-    #high-scores-area h2 {
-        font-size: calc(1.3em * var(--font-scale-factor)); /* Example adjustment for smaller screens */
-    }
-     /* Further adjustments if needed based on visual testing */
-}
-
-
-/* Specific Sizing and POSITIONING for High Score Area */
-#high-scores-area {
-    width: 100%;
-    max-width: 300px; /* Adjust if needed */
-    text-align: left;
-    /* Remove min-height or adjust as needed for vertical centering */
-    /* min-height: 300px; */
-
-    /* --- NEW POSITIONING --- */
-    position: fixed;       /* Position relative to the viewport */
-    top: 50%;              /* Position top edge at the vertical midpoint */
-    right: 10%;            /* Distance from the right edge (e.g., 10% of viewport width) */
-    transform: translateY(-50%); /* Shift element up by half its own height to center it */
-
-    /* --- Keep Existing Styling --- */
-    background-color: rgba(30, 30, 30, 0.9);
-    border: 1px solid #333;
-    border-radius: 15px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-    z-index: 10;
-    transition: padding 0.3s ease-out, width 0.3s ease-out, top 0.3s ease-out, right 0.3s ease-out, transform 0.3s ease-out; /* Add transform to transition */
-    overflow: hidden;
-    --font-scale-factor: 1;
-    padding: calc(30px * var(--font-scale-factor)) calc(40px * var(--font-scale-factor));
-}
-
-/* style.css */
-
-/* Add these new rules */
-
+/* --- Mobile Toggle Buttons --- */
 .mobile-toggle-container {
-    display: none; /* Hidden by default */
+    display: none; /* Hidden by default, shown via media query */
     width: 100%;
-    max-width: 650px; /* Match quiz container max-width */
+    max-width: 650px;
     margin-bottom: 20px;
-    gap: 10px; /* Space between buttons */
+    gap: 10px;
     justify-content: center;
     align-items: center;
 }
 
 .mobile-toggle-container .btn {
-    flex-grow: 1; /* Allow buttons to grow */
+    flex-grow: 1;
     text-align: center;
-    /* Inherit or define specific button styles if needed */
 }
 
-/* Hide the back button by default */
 #back-to-menu-btn {
-    display: none;
+    display: none; /* Hidden initially, shown by JS */
 }
 
 
-/* Modify the existing media query for smaller screens */
-@media (max-width: 950px) {
+/* --- Responsive Adjustments --- */
+@media (max-width: 1570px) { /* Breakpoint for stacking */
     .main-layout-container {
-        flex-direction: column; /* Stack vertically */
-        align-items: center; /* Center items horizontally when stacked */
+        flex-direction: column;
+        align-items: center;
         gap: 30px;
         max-width: 700px;
     }
     .quiz-container {
         max-width: 100%;
-        order: 1; /* Quiz first */
+        order: 1;
         flex-basis: auto;
     }
     #high-scores-area {
-        max-width: 450px; /* Allow score area to be wider when stacked */
+        max-width: 450px;
         width: 90%;
-        order: 2; /* Score panel below quiz */
+        order: 2;
         margin-bottom: 20px;
         flex-basis: auto;
-        /* Now uses same padding as quiz-container, adjusts with scale factor */
-
-        /* NEW: Hide high scores area by default on small screens */
-        display: none;
-
-        /* Reset positioning for stacked layout */
+        display: none; /* Hidden by default on mobile */
+        /* Reset fixed positioning for stacked layout */
         position: static;
         top: auto;
         right: auto;
         transform: none;
     }
 
-    /* NEW: Show the mobile toggle container */
+    /* Show the mobile toggle container */
     .mobile-toggle-container {
-        display: flex; /* Show the container */
-        order: 0; /* Place it above the quiz container */
+        display: flex;
+        order: 0; /* Place above quiz */
     }
 
-    /* NEW: Classes for toggling visibility on mobile */
-    body.scoreboard-visible-mobile #quiz-container {
-        display: none; /* Hide quiz container */
-    }
-
-    body.scoreboard-visible-mobile #high-scores-area {
-        display: block; /* Show high scores area */
-    }
-
-     body.menu-visible-mobile #quiz-container {
-        display: block; /* Show quiz container */
-    }
-
-    body.menu-visible-mobile #high-scores-area {
-        display: none; /* Hide high scores area */
-    }
-
-
+    /* Classes for toggling visibility on mobile */
+    body.scoreboard-visible-mobile #quiz-container { display: none; }
+    body.scoreboard-visible-mobile #high-scores-area { display: block; }
+    body.menu-visible-mobile #quiz-container { display: block; }
+    body.menu-visible-mobile #high-scores-area { display: none; }
 }
 
 @media (max-width: 600px) {
@@ -521,51 +501,16 @@ h2#question-text.text-fade-in { opacity: 1; }
     .quiz-container,
     #high-scores-area { /* Apply reduced padding to both */
         padding: calc(20px * var(--font-scale-factor)) calc(20px * var(--font-scale-factor));
-        min-height: 250px; /* Adjust min height */
+        min-height: 250px;
     }
      #high-scores-area {
         max-width: 100%;
         width: 95%;
     }
-
-    /* Font sizes inside high-scores-area will now scale via the var */
     #high-scores-area h2 {
-        font-size: calc(1.3em * var(--font-scale-factor)); /* Example adjustment for smaller screens */
+        font-size: calc(1.3em * var(--font-scale-factor));
     }
-     /* Further adjustments if needed based on visual testing */
-
-     /* Ensure toggle container scales down */
      .mobile-toggle-container {
         max-width: 100%;
-     }
-}
-
-
-/* Specific Sizing and POSITIONING for High Score Area (Desktop) */
-/* Keep the original positioning for larger screens */
-@media (min-width: 951px) {
-    #high-scores-area {
-        position: fixed;       /* Position relative to the viewport */
-        top: 50%;              /* Position top edge at the vertical midpoint */
-        right: 10%;            /* Distance from the right edge (e.g., 10% of viewport width) */
-        transform: translateY(-50%); /* Shift element up by half its own height to center it */
-        width: 100%;
-        max-width: 300px; /* Adjust if needed */
-        text-align: left;
-        z-index: 10; /* Ensure it's above the quiz container if needed */
-        display: block !important; /* Always visible on large screens */
-    }
-
-    /* Hide the mobile toggle container on large screens */
-    .mobile-toggle-container {
-        display: none !important;
-    }
-
-    /* Ensure default visibility for large screens */
-     body.scoreboard-visible-mobile #quiz-container,
-     body.menu-visible-mobile #quiz-container,
-     body.scoreboard-visible-mobile #high-scores-area,
-     body.menu-visible-mobile #high-scores-area {
-        display: block !important; /* Override mobile display rules on large screens */
      }
 }

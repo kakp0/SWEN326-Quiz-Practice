@@ -42,7 +42,7 @@ const TARGET_VIEWPORT_HEIGHT_RATIO = 0.90; // For main quiz container
 const HEIGHT_TRANSITION_DURATION = 400;
 const COOKIE_EXPIRY_DAYS = 365; // Set cookies to expire in a year
 const STAR_GLOW_THRESHOLDS = [33.33, 66.67, 100]; // Percentage thresholds for star 1, 2, 3 glow
-const MOBILE_BREAKPOINT = 950; // Match the CSS media query breakpoint
+const MOBILE_BREAKPOINT = 1570; // Match the CSS media query breakpoint
 
 // --- Quiz State Variables ---
 let allQuestionsRaw = [];

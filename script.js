@@ -1,3 +1,5 @@
+// script.js
+
 // --- DOM Elements ---
 const startScreen = document.getElementById('start-screen');
 const quizScreen = document.getElementById('quiz-screen');
@@ -25,6 +27,12 @@ const highScoreDisplay = {
     '2024': highScoreArea ? highScoreArea.querySelector('#high-score-2024') : null,
 };
 
+// NEW: Mobile toggle elements
+const mobileToggleContainer = document.querySelector('.mobile-toggle-container');
+const showScoreboardBtn = document.getElementById('show-scoreboard-btn');
+const backToMenuBtn = document.getElementById('back-to-menu-btn');
+const body = document.body; // Reference to the body element
+
 // --- Constants ---
 const SHRINK_ANIMATION_DURATION = 400;
 const CONTENT_FADE_DURATION = 300;
@@ -34,6 +42,7 @@ const TARGET_VIEWPORT_HEIGHT_RATIO = 0.90; // For main quiz container
 const HEIGHT_TRANSITION_DURATION = 400;
 const COOKIE_EXPIRY_DAYS = 365; // Set cookies to expire in a year
 const STAR_GLOW_THRESHOLDS = [33.33, 66.67, 100]; // Percentage thresholds for star 1, 2, 3 glow
+const MOBILE_BREAKPOINT = 950; // Match the CSS media query breakpoint
 
 // --- Quiz State Variables ---
 let allQuestionsRaw = [];
@@ -42,6 +51,9 @@ let currentQuestionIndex = 0;
 let score = 0;
 let quizResults = [];
 let lastQuizType = null; // Stores 'full', '2025', or '2024'
+
+// NEW: Mobile view state
+let mobileView = 'menu'; // 'menu' or 'scoreboard'
 
 // --- Functions ---
 
@@ -136,15 +148,6 @@ function shuffleArray(array) {
  * @param {HTMLElement} activeScreen The screen element to make active.
  */
 function switchScreen(activeScreen) {
-    // Always ensure high score panel is visible when switching screens inside quiz
-    // This check might be redundant if highScoreArea is never hidden, but safe to keep.
-    if (highScoreArea) {
-        highScoreArea.style.display = 'block'; // Or 'flex' if it becomes a flex item in some layout
-    } else {
-        console.error("High score area element not found!");
-    }
-
-
     console.log(`DEBUG: Switching screen to: ${activeScreen.id}`);
     const currentActive = quizContainer.querySelector('.screen.active'); // Look inside quiz container
 
@@ -216,7 +219,72 @@ function switchScreen(activeScreen) {
              }, HEIGHT_TRANSITION_DURATION);
          });
     }
+
+    // NEW: Manage mobile view state and button visibility when switching screens
+    if (window.innerWidth <= MOBILE_BREAKPOINT) {
+        if (activeScreen === startScreen) {
+            toggleMobileView('menu'); // Always show menu view on start screen
+        } else {
+             // When moving to quiz or end screen, default back to menu view
+             // The user can then manually switch to scoreboard if desired
+             toggleMobileView('menu');
+             // Optional: You might want to keep the scoreboard visible alongside if desired
+             // based on further user feedback, but for now, default to menu.
+        }
+    } else {
+         // On larger screens, ensure both are visible and remove mobile classes
+         body.classList.remove('menu-visible-mobile', 'scoreboard-visible-mobile');
+         if (quizContainer) quizContainer.style.display = ''; // Reset display
+         if (highScoreArea) highScoreArea.style.display = ''; // Reset display
+    }
 }
+
+// NEW: Function to toggle between menu and scoreboard views on mobile
+function toggleMobileView(view) {
+    if (window.innerWidth > MOBILE_BREAKPOINT) {
+        // Do nothing if not on mobile
+        return;
+    }
+
+    mobileView = view; // Update state
+
+    if (view === 'menu') {
+        body.classList.add('menu-visible-mobile');
+        body.classList.remove('scoreboard-visible-mobile');
+        if (showScoreboardBtn) showScoreboardBtn.style.display = 'block';
+        if (backToMenuBtn) backToMenuBtn.style.display = 'none';
+        console.log("DEBUG: Switched to mobile menu view.");
+         // Ensure quiz container is visible and high score area is hidden by CSS classes
+    } else if (view === 'scoreboard') {
+        body.classList.add('scoreboard-visible-mobile');
+        body.classList.remove('menu-visible-mobile');
+        if (showScoreboardBtn) showScoreboardBtn.style.display = 'none';
+        if (backToMenuBtn) backToMenuBtn.style.display = 'block';
+        console.log("DEBUG: Switched to mobile scoreboard view.");
+         // Ensure high score area is visible and quiz container is hidden by CSS classes
+    }
+
+    // Adjust font size after visibility changes
+    checkAndAdjustFontSize();
+}
+
+// NEW: Function to initialize mobile view on load and resize
+function initializeMobileView() {
+    if (window.innerWidth <= MOBILE_BREAKPOINT) {
+        // On mobile, ensure the toggle container is visible and set initial view to menu
+        if (mobileToggleContainer) mobileToggleContainer.style.display = 'flex';
+        toggleMobileView('menu'); // Set initial state to menu view
+    } else {
+        // On larger screens, hide the toggle container and ensure default layout
+        if (mobileToggleContainer) mobileToggleContainer.style.display = 'none';
+        body.classList.remove('menu-visible-mobile', 'scoreboard-visible-mobile'); // Clean up mobile classes
+        if (quizContainer) quizContainer.style.display = ''; // Reset display
+        if (highScoreArea) highScoreArea.style.display = ''; // Reset display
+    }
+     // Always call checkAndAdjustFontSize on resize regardless of mobile view
+    checkAndAdjustFontSize();
+}
+
 
 /**
  * Initializes and starts the quiz based on the selected type.
@@ -518,7 +586,7 @@ function calculateGrade(score, total) {
 
 /**
  * Saves the current quiz score to session storage and cookies (if it's a high score),
- * and then updates the high score display panel.
+ * and then updates the high score panel display.
  * @param {string} quizType The type of quiz ('full', '2025', or '2024').
  * @param {number} finalScore The final score achieved in the quiz.
  * @param {number} totalQuestions The total number of questions in the quiz.
@@ -593,6 +661,11 @@ function endQuiz() {
     // Prepare for screen transition (This remains in endQuiz)
     quizContainer.style.maxHeight = 'none'; // Allow end screen to determine height
     requestAnimationFrame(() => { switchScreen(endScreen); }); // Switch to end screen
+
+    // NEW: On quiz end, if on mobile, ensure we are in menu view
+    if (window.innerWidth <= MOBILE_BREAKPOINT) {
+        toggleMobileView('menu');
+    }
 }
 
 /**
@@ -747,28 +820,41 @@ function displayHighScores() {
         return;
     }
 
-    // Only perform adjustment if the quiz or end screen is active within the quiz container
+    // Only perform adjustment if the quiz or end screen is active within the quiz container OR if on mobile and showing the scoreboard
     const quizScreenActive = quizScreen && quizScreen.classList.contains('active');
     const endScreenActive = endScreen && endScreen.classList.contains('active');
+    const showingScoreboardMobile = window.innerWidth <= MOBILE_BREAKPOINT && mobileView === 'scoreboard';
+
 
     // Default scale factor
     let applyScaleFactor = 1;
+    let elementToMeasure = quizContainer; // Default to measuring quiz container
 
-    if (quizScreenActive || endScreenActive) {
+    if (showingScoreboardMobile) {
+        elementToMeasure = highScoreArea; // Measure high score area on mobile when visible
+         if (!elementToMeasure) {
+             console.warn("checkAndAdjustFontSize: highScoreArea element not found when needed.");
+             return;
+         }
+    }
+
+
+    if (quizScreenActive || endScreenActive || showingScoreboardMobile) {
         // Temporarily remove max-height to measure natural content height
-        quizContainer.style.maxHeight = 'none';
+        elementToMeasure.style.maxHeight = 'none';
         // Force browser reflow to get updated scrollHeight
-        quizContainer.offsetHeight;
+        elementToMeasure.offsetHeight;
 
-        const contentHeight = quizContainer.scrollHeight; // Height of content inside
+        const contentHeight = elementToMeasure.scrollHeight; // Height of content inside
         const viewportHeight = window.innerHeight; // Height of the browser window
 
-        // Calculate available height for the quiz container
-        const containerMarginTop = parseInt(getComputedStyle(quizContainer).marginTop) || 0;
-        const containerMarginBottom = parseInt(getComputedStyle(quizContainer).marginBottom) || 0;
+        // Calculate available height for the container being measured
+        const containerMarginTop = parseInt(getComputedStyle(elementToMeasure).marginTop) || 0;
+        const containerMarginBottom = parseInt(getComputedStyle(elementToMeasure).marginBottom) || 0;
         const bodyPaddingTop = parseInt(getComputedStyle(document.body).paddingTop) || 0;
         const bodyPaddingBottom = parseInt(getComputedStyle(document.body).paddingBottom) || 0;
         const availableHeight = viewportHeight - containerMarginTop - containerMarginBottom - bodyPaddingTop - bodyPaddingBottom;
+
 
         // Target height is a percentage of the available height
         const targetHeight = availableHeight * TARGET_VIEWPORT_HEIGHT_RATIO;
@@ -782,7 +868,10 @@ function displayHighScores() {
     }
 
     // Apply the calculated scale factor using the CSS variable on BOTH containers
-    quizContainer.style.setProperty('--font-scale-factor', applyScaleFactor);
+    // This ensures consistent scaling across both panels when needed
+    if (quizContainer) {
+         quizContainer.style.setProperty('--font-scale-factor', applyScaleFactor);
+    }
     if (highScoreArea) {
         highScoreArea.style.setProperty('--font-scale-factor', applyScaleFactor);
     }
@@ -808,7 +897,23 @@ if(backToStartBtn) backToStartBtn.addEventListener('click', () => { switchScreen
 if(nextBtn) nextBtn.addEventListener('click', nextQuestion);
 
 // Adjust quiz container font size on window resize
-window.addEventListener('resize', checkAndAdjustFontSize);
+// NEW: Call initializeMobileView on resize as well
+window.addEventListener('resize', () => {
+    initializeMobileView(); // Re-evaluate and set up mobile view
+});
+
+// NEW: Event listeners for mobile toggle buttons
+if (showScoreboardBtn) {
+    showScoreboardBtn.addEventListener('click', () => {
+        toggleMobileView('scoreboard');
+    });
+}
+
+if (backToMenuBtn) {
+    backToMenuBtn.addEventListener('click', () => {
+        toggleMobileView('menu');
+    });
+}
 
 
 // --- Initial Setup ---
@@ -817,13 +922,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Critical Element Check ---
     // Verify that all essential container elements exist in the DOM
-     if (!quizContainer || !startScreen || !quizScreen || !endScreen || !highScoreArea) {
-         console.error("CRITICAL ERROR: Core layout elements missing from HTML. Aborting initialization. Check IDs: quiz-container, start-screen, quiz-screen, end-screen, high-scores-area");
+     if (!quizContainer || !startScreen || !quizScreen || !endScreen || !highScoreArea || !mobileToggleContainer || !showScoreboardBtn || !backToMenuBtn) {
+         console.error("CRITICAL ERROR: Core layout elements missing from HTML. Aborting initialization. Check IDs: quiz-container, start-screen, quiz-screen, end-screen, high-scores-area, mobile-toggle-container, show-scoreboard-btn, back-to-menu-btn");
          // Display an error message to the user if core elements are missing
          document.body.innerHTML = '<p style="color: red; font-size: 1.5em; text-align: center; padding: 50px; background: #333; border-radius: 10px; margin: 50px auto; max-width: 600px;">Error: Could not initialize quiz. Essential HTML elements are missing. Please check the HTML file structure.</p>';
          return; // Stop execution if critical elements are missing
      }
      // --- End Critical Element Check ---
+
 
     // Load question data (assuming questions.js defines these variables globally)
     const data2025 = typeof quizData !== 'undefined' ? quizData : [];
@@ -840,4 +946,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Switch to the start screen initially.
     // displayHighScores will be called by switchScreen when the start screen becomes active.
     switchScreen(startScreen);
+
+    // NEW: Initialize mobile view setup on load
+    initializeMobileView();
 });

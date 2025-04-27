@@ -11,34 +11,24 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    color: #e0e0e0; /* Light text color */
-    padding: 20px; /* Add some padding around the container */
+    color: #e0e0e0;
+    padding: 20px; /* Add padding around the main container */
 
-    /* --- Updated Black Background & Caustics Effect --- */
-    background-color: #080808; /* Near black base */
+    /* Background Effect */
+    background-color: #080808;
     background-image:
-        /* Layer 1: Slightly more pronounced ripples */
         radial-gradient(ellipse at center, rgba(200, 200, 200, 0.12) 0%, rgba(200, 200, 200, 0) 70%),
-        /* Layer 2: Fainter, larger ripples */
         radial-gradient(ellipse at center, rgba(220, 220, 220, 0.1) 0%, rgba(220, 220, 220, 0) 65%),
-        /* Layer 3: Base dark gradient */
         linear-gradient(135deg, #111 0%, #000 100%);
     background-size:
-        150% 150%, /* Ripple 1 */
-        200% 200%, /* Ripple 2 */
-        100% 100%; /* Base */
+        150% 150%, 200% 200%, 100% 100%;
     background-position:
-        0% 0%,    /* Ripple 1 */
-        50% 50%,  /* Ripple 2 */
-        0% 0%;    /* Base */
-    /* Faster and more varied animation */
-    animation: causticsShift 30s linear infinite alternate; /* Reduced duration */
-    /* --- End Background Effect --- */
-
-    overflow: hidden; /* Prevent scrollbars on the body */
+        0% 0%, 50% 50%, 0% 0%;
+    animation: causticsShift 30s linear infinite alternate;
+    overflow-x: hidden;
 }
 
-/* Keyframes for more pronounced caustics animation */
+/* Keyframes for caustics animation */
 @keyframes causticsShift {
     0% { background-position: 0% 0%, 50% 50%, 0% 0%; }
     25% { background-position: 40% 50%, 80% 30%, 0% 0%; }
@@ -47,586 +37,392 @@ body {
     100% { background-position: 0% 50%, 50% 0%, 0% 0%; }
 }
 
-/* Quiz Container */
-.quiz-container {
+/* Main Layout Container */
+.main-layout-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 25px;
+    width: 100%;
+    max-width: 1050px; /* Adjust as needed for combined width */
+    position: relative;
+}
+
+/* Base Panel Styling (Common to Quiz and High Scores) */
+.quiz-container,
+#high-scores-area {
     background-color: rgba(30, 30, 30, 0.9);
     border: 1px solid #333;
     border-radius: 15px;
-    padding: 30px 40px; /* Base padding, will be scaled below */
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-    width: 100%;
-    max-width: 700px;
-    text-align: center;
     position: relative;
     z-index: 1;
-    /* Ensure max-height has a transition */
-    transition: max-height 0.4s ease-in-out, min-height 0.4s ease-in-out, padding 0.3s ease-out;
-    overflow: hidden; /* Prevent container scrollbars */
-    max-height: 95vh; /* Initial large max-height */
-    min-height: 300px; /* ADJUST IF NEEDED: A stable minimum height */
-    /* --- ADDED: Define a CSS variable for font scaling --- */
-    --font-scale-factor: 1; /* Default scale is 1 */
-    /* Apply scaling to padding using the variable */
+    transition: max-height 0.4s ease-in-out, min-height 0.4s ease-in-out, padding 0.3s ease-out, width 0.3s ease-out;
+    overflow: hidden;
+    /* Use the font scale factor defined in quiz-container by JS */
+    --font-scale-factor: 1;
+    /* Apply same padding */
     padding: calc(30px * var(--font-scale-factor)) calc(40px * var(--font-scale-factor));
+    flex: 0 0 auto; /* Don't grow or shrink */
 }
 
-/* Add a class for the shrinking state (if still used for animation) */
+/* Specific Sizing for Quiz Container */
+.quiz-container {
+    width: 100%;
+    max-width: 650px;
+    text-align: center;
+    min-height: 300px;
+}
+
+/* Specific Sizing for High Score Area */
+#high-scores-area {
+    width: 100%;
+    max-width: 300px; /* Adjust if needed */
+    text-align: left; /* Keep text left-aligned */
+    min-height: 300px; /* Match quiz container's min-height if desired */
+}
+
+
+/* Quiz Container Shrinking State */
 .quiz-container.shrinking {
     max-height: 70px;
     min-height: 70px !important;
+    padding-top: calc(10px * var(--font-scale-factor)); /* Adjust padding when shrunk */
+    padding-bottom: calc(10px * var(--font-scale-factor));
 }
 
-
-/* Screen Management & Basic Fade */
-.screen {
-    display: none;
-    animation: fadeIn 0.5s ease-out forwards;
-}
-.screen.active {
-    display: block;
-}
-.screen.fade-out {
-    animation: fadeOut 0.4s ease-in forwards;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(15px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes fadeOut {
-    from { opacity: 1; transform: translateY(0); }
-    to   { opacity: 0; transform: translateY(-15px); }
-}
+/* Screen Management & Basic Fade (Inside Quiz Container) */
+.screen { display: none; animation: fadeIn 0.5s ease-out forwards; }
+.screen.active { display: block; }
+.screen.fade-out { animation: fadeOut 0.4s ease-in forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-15px); } }
 
 /* Q/A Container */
 .q-a-container {
     opacity: 1;
     transform: translateX(0);
-    padding-bottom: 10px; /* Space for next button */
-    /* Removed height transition from here */
+    padding-bottom: 10px;
     transition: opacity 0.3s ease-out, transform 0.3s ease-out;
 }
 
 
-/* Apply scaling to text elements using the variable & add transitions */
+/* --- High Score Panel Specific Styling --- */
+#high-scores-area h2 {
+    color: #f5f5f5; /* Match question text color */
+    font-size: calc(1.4em * var(--font-scale-factor)); /* Match question text size */
+    margin-bottom: calc(25px * var(--font-scale-factor)); /* Match question text margin */
+    text-align: center; /* Center the "High Scores" title */
+    border-bottom: 1px solid #444;
+    padding-bottom: calc(12px * var(--font-scale-factor));
+    transition: font-size 0.3s ease-out, margin-bottom 0.3s ease-out, padding-bottom 0.3s ease-out, color 0.3s ease-out;
+}
 
-h1 { /* Applies to start/end screens */
+/* High Score Entry Styling */
+.high-score-entry {
+    display: flex; flex-direction: column; align-items: center;
+    padding: calc(12px * var(--font-scale-factor)) 0;
+    margin-bottom: calc(20px * var(--font-scale-factor)); /* Keep some margin */
+    font-size: calc(1em * var(--font-scale-factor)); /* Scale with container */
+    color: #ccc;
+    /* REMOVE dotted border */
+    border-bottom: none; /* Changed from 1px dashed #444; */
+    transition: padding 0.3s ease-out, margin-bottom 0.3s ease-out, font-size 0.3s ease-out;
+}
+.high-score-entry:last-child { border-bottom: none; margin-bottom: 0; }
+
+.high-score-entry .test-title {
+    font-size: calc(1.1em * var(--font-scale-factor)); /* Scale title */
+    font-weight: bold; color: #ddd;
+    margin-bottom: calc(10px * var(--font-scale-factor));
+    transition: font-size 0.3s ease-out, margin-bottom 0.3s ease-out;
+}
+
+.high-score-entry .score-details { display: flex; flex-direction: column; align-items: center; width: 100%; }
+
+/* --- General Star Rating Styling --- */
+/* Applied via class, so it's consistent */
+.stars-container {
+    display: inline-block; position: relative;
+    line-height: 1; vertical-align: middle;
+    margin: calc(8px * var(--font-scale-factor)) 0; /* Use standard margin */
+    /* Base size uses the container's scale factor */
+    /* Increased base size slightly */
+    --star-base-size: calc(2.8em * var(--font-scale-factor)); /* Increased from 2.5em */
+    --star-mid-scale: 1.15; /* Keep the same scale for the middle star */
+    --star-empty-color: rgba(255, 255, 255, 0.15);
+    --star-fill-color: gold;
+    --star-glow-color-rgb: 255, 215, 0;
+    transition: font-size 0.3s ease-out, margin 0.3s ease-out; /* Added margin transition */
+}
+
+/* --- REMOVE Overrides for Star Size in High Score Panel ---
+   We want it to use the general style above now.
+#high-scores-area .stars-container {
+    --star-base-size: calc(3.5em * var(--font-scale-factor)); // Removed
+    margin: calc(15px * var(--font-scale-factor)) 0; // Removed, use default
+}
+*/
+
+.stars-background, .stars-foreground { display: block; white-space: nowrap; }
+.stars-background { color: var(--star-empty-color); }
+.stars-foreground {
+    position: absolute; top: 0; left: 0;
+    color: var(--star-fill-color);
+    overflow: hidden; width: 0%; /* Set by JS */
+    transition: width 0.4s ease-out, color 0.4s ease-out;
+}
+
+.stars-container .star {
+    display: inline-block;
+    font-size: var(--star-base-size);
+    text-shadow: none;
+    transition: transform 0.3s ease-out, text-shadow 0.4s ease-out;
+    font-family: 'Segoe UI Symbol', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
+    padding: 0 1px;
+}
+
+/* Glow style applied by JS */
+.stars-container .star.glow {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.6),
+                 0 0 10px rgba(var(--star-glow-color-rgb), 0.9),
+                 0 0 15px rgba(var(--star-glow-color-rgb), 0.7);
+}
+
+/* Angry Birds Style - Middle star bigger */
+.stars-container .star-2 {
+    font-size: calc(var(--star-base-size) * var(--star-mid-scale));
+    transform: translateY(calc(-0.05 * var(--star-base-size)));
+}
+
+/* Rainbow effect for 100% */
+.stars-container.rainbow-stars .stars-foreground {
+    color: transparent;
+    background: linear-gradient(to right, #ff3030, #ffae30, #ffff30, #30ff30, #30ffff, #3030ff, #ae30ff);
+    -webkit-background-clip: text; background-clip: text;
+}
+.stars-container.rainbow-stars .stars-foreground .star.glow {
+     text-shadow: 0 0 8px rgba(255, 255, 255, 0.9),
+                  0 0 15px rgba(255, 255, 255, 0.7);
+}
+/* --- End Star Styling --- */
+
+
+.high-score-entry .score-total-grade {
+    font-size: calc(1em * var(--font-scale-factor)); /* Scale with container */
+    color: #fff;
+    margin-top: calc(10px * var(--font-scale-factor));
+    text-align: center;
+    transition: font-size 0.3s ease-out, margin-top 0.3s ease-out;
+}
+.high-score-entry .score-text, .high-score-entry .grade-text { font-weight: normal; color: inherit; }
+
+/* --- Rest of the styles (buttons, quiz elements, etc. inside .quiz-container) --- */
+/* (These remain largely the same, using quiz-container's scale factor) */
+
+h1 {
     color: #ffffff;
     font-size: calc(2.2em * var(--font-scale-factor));
     margin-bottom: calc(15px * var(--font-scale-factor));
     transition: font-size 0.3s ease-out, margin-bottom 0.3s ease-out;
 }
 
-/* --- High Score Area Styling --- */
-#high-scores-area {
-    margin-top: calc(30px * var(--font-scale-factor));
-    padding-top: calc(15px * var(--font-scale-factor));
-    border-top: 1px solid #444;
-    text-align: left;
-}
-
-#high-scores-area h2 {
-    color: #bbb;
-    font-size: calc(1.3em * var(--font-scale-factor));
-    margin-bottom: calc(15px * var(--font-scale-factor));
-    text-align: center;
-}
-
-.high-score-entry {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Distribute space */
-    padding: calc(8px * var(--font-scale-factor)) 0;
-    margin-bottom: calc(5px * var(--font-scale-factor));
-    font-size: calc(1em * var(--font-scale-factor));
-    color: #ccc;
-    flex-wrap: wrap; /* Allow wrapping on small screens if needed */
-}
-
-.high-score-entry span:first-child { /* Label (e.g., "Full Test:") */
-    flex-basis: 120px; /* Give label some fixed space */
-    flex-grow: 0;
-    flex-shrink: 0;
-    font-weight: bold;
-    color: #ddd;
-}
-
-.high-score-entry .score-text {
-    flex-basis: 80px; /* Space for score like "18/25" */
-    text-align: right;
-    color: #fff;
-    font-weight: bold;
-}
-
-.high-score-entry .grade-text {
-    flex-basis: 40px; /* Space for grade like "A+" */
-    text-align: center;
-    color: #fff;
-    font-weight: bold;
-}
-
-.stars-container {
-    display: inline-flex; /* Use inline-flex for stars */
-    align-items: center;
-    margin-left: calc(10px * var(--font-scale-factor)); /* Space before stars */
-    flex-basis: 80px; /* Fixed width for 3 stars */
-    height: calc(20px * var(--font-scale-factor)); /* Star height */
-    background: linear-gradient(to right, gold var(--star-fill-percentage, 0%), rgba(255, 255, 255, 0.2) var(--star-fill-percentage, 0%));
-    clip-path: url(#starClip); /* Apply the star shape mask */
-    -webkit-clip-path: url(#starClip); /* Safari */
-}
-
-/* Define the star shape in SVG (can be hidden in HTML or here) */
-/* You'll need to add the SVG to your HTML for this clip-path to work reliably */
-/* Example SVG (add this within your <body> or a hidden div in index.html):
-<svg width="0" height="0">
-  <defs>
-    <clipPath id="starClip" clipPathUnits="objectBoundingBox">
-       <path d="M0.5,0 L0.61,0.35 L0.98,0.35 L0.68,0.57 L0.79,0.91 L0.5,0.69 L0.21,0.91 L0.32,0.57 L0.02,0.35 L0.39,0.35 Z"/>
-     </clipPath>
-  </defs>
-</svg>
-*/
-
-/* Alternative Star Styling (Simpler using text characters) - Uncomment if SVG clip-path is problematic */
-/*
-.stars-container {
-    display: inline-block;
-    position: relative;
-    font-size: calc(1.5em * var(--font-scale-factor)); /* Adjust size */
-/* line-height: 1;
-    color: rgba(255, 255, 255, 0.2); /* Empty star color */
-/* }
-
-.stars-container::before {
-    content: '★★★'; /* Three empty stars */
-/* }
-
-.stars-container::after {
-    content: '★★★'; /* Three filled stars */
-/* position: absolute;
-    top: 0;
-    left: 0;
-    color: gold;
-    overflow: hidden;
-    width: var(--star-fill-percentage, 0%); /* Control fill */
-/* white-space: nowrap;
-}*/
-/* --- End High Score Area Styling --- */
-
-
-p { /* Base paragraph styling */
+p { /* Default paragraph style within quiz-container */
     color: #ccc;
     font-size: calc(1.1em * var(--font-scale-factor));
     margin-bottom: calc(25px * var(--font-scale-factor));
     transition: font-size 0.3s ease-out, margin-bottom 0.3s ease-out;
 }
 
-#result-text { /* Specific style for result */
+#result-text { /* Inside end-screen */
     font-size: calc(1.3em * var(--font-scale-factor));
     font-weight: bold;
     color: #ffffff;
     margin-bottom: calc(30px * var(--font-scale-factor));
-    /* Inherits transition from p or add specific if needed */
 }
 
-h2#question-text {
+h2#question-text { /* Inside quiz-screen */
     color: #f5f5f5;
     font-size: calc(1.4em * var(--font-scale-factor));
-    line-height: 1.5; /* Keep line-height relative */
-    min-height: calc(60px * var(--font-scale-factor)); /* Scale min-height */
-    margin-bottom: calc(25px * var(--font-scale-factor)); /* Scale margin */
+    line-height: 1.5;
+    min-height: calc(60px * var(--font-scale-factor));
+    margin-bottom: calc(25px * var(--font-scale-factor));
     text-align: left;
-    transition: opacity 0.3s ease-in-out, font-size 0.3s ease-out, min-height 0.3s ease-out, margin-bottom 0.3s ease-out; /* Added font-size etc. transitions */
+    transition: opacity 0.3s ease-in-out, font-size 0.3s ease-out, min-height 0.3s ease-out, margin-bottom 0.3s ease-out;
 }
-h2#question-text.text-fade-out {
-    opacity: 0;
-}
-h2#question-text.text-fade-in {
-    opacity: 1;
+h2#question-text.text-fade-out { opacity: 0; }
+h2#question-text.text-fade-in { opacity: 1; }
+
+.btn-stack { /* Inside quiz-screen, start-screen, end-screen */
+    display: flex; flex-direction: column;
+    gap: calc(12px * var(--font-scale-factor));
+    margin-top: calc(20px * var(--font-scale-factor));
+    transition: opacity 0.3s ease-out, gap 0.3s ease-out, margin-top 0.3s ease-out;
 }
 
-/* Vertical Button Stack for Answers */
-.btn-stack {
-    display: flex;
-    flex-direction: column;
-    gap: calc(12px * var(--font-scale-factor)); /* Scale gap */
-    margin-top: calc(20px * var(--font-scale-factor)); /* Scale margin */
-    transition: opacity 0.3s ease-out, gap 0.3s ease-out, margin-top 0.3s ease-out; /* Added gap/margin transitions */
-}
-
-/* General Button Styling (Used for Answer Choices) */
-.btn {
-    background-color: #333;
-    color: #f0f0f0;
-    border: 1px solid #555;
-    border-radius: calc(8px * var(--font-scale-factor)); /* Scale border-radius */
-    padding: calc(15px * var(--font-scale-factor)) calc(25px * var(--font-scale-factor)); /* Scale padding */
-    font-size: calc(1.1em * var(--font-scale-factor)); /* Scale font size */
-    cursor: pointer;
-    text-align: left;
-    width: 100%;
-    box-shadow: none;
-    /* Added font-size/padding/border-radius transitions */
+.btn { /* General button style */
+    background-color: #333; color: #f0f0f0; border: 1px solid #555;
+    border-radius: calc(8px * var(--font-scale-factor));
+    padding: calc(15px * var(--font-scale-factor)) calc(25px * var(--font-scale-factor));
+    font-size: calc(1.1em * var(--font-scale-factor));
+    cursor: pointer; text-align: left; width: 100%; box-shadow: none;
     transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease, font-size 0.3s ease-out, padding 0.3s ease-out, border-radius 0.3s ease-out;
 }
-.btn:hover:not(.disabled):not(.correct):not(.incorrect) {
-    background-color: #444;
-    border-color: #777;
-    transform: translateY(-2px);
-}
-.btn:active:not(.disabled) {
-    transform: translateY(0);
-}
+.btn:hover:not(.disabled):not(.correct):not(.incorrect) { background-color: #444; border-color: #777; transform: translateY(-2px); }
+.btn:active:not(.disabled) { transform: translateY(0); }
+.btn.disabled { pointer-events: none; cursor: default; }
 
-/* Modified Disabled Style for General Buttons (Answer Choices) */
-/* Only make buttons non-clickable, don't change visual appearance */
-.btn.disabled {
-    pointer-events: none;
-    /* opacity: 0.65; REMOVED */
-    cursor: default;
-}
-
-/* Specific Buttons (Start, Retry) - ORIGINAL Blue style REMOVED */
-#start-btn, #retry-btn { /* This rule might be redundant now, but kept for structure */
-    display: inline-block;
-    width: auto;
-    /* Use calc for padding, inheriting other scaled properties */
+.next-btn { /* Specific to next button inside quiz-screen */
+    display: inline-block; width: auto;
     padding: calc(15px * var(--font-scale-factor)) calc(40px * var(--font-scale-factor));
-    text-align: center;
-    margin-top: calc(20px * var(--font-scale-factor));
-    /* background-color: #007bff; REMOVED */
-    /* border-color: #0056b3; REMOVED */
-    /* color: white; REMOVED */
-}
-
-/* Next Button Specific Styling & Animation - ORIGINAL Blue Style REMOVED */
-.next-btn { /* Base class still used for layout/visibility */
-    display: inline-block;
-    width: auto;
-    /* Use calc for padding/margins, inheriting other scaled properties */
-    padding: calc(15px * var(--font-scale-factor)) calc(40px * var(--font-scale-factor));
-    text-align: center;
-    /* background-color: #007bff; REMOVED */
-    /* border-color: #0056b3; REMOVED */
-    /* color: white; REMOVED */
-    cursor: pointer;
-    overflow: hidden;
-    margin-top: calc(20px * var(--font-scale-factor));
-    margin-bottom: calc(10px * var(--font-scale-factor));
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    /* Keep opacity/visibility transition, others handled by new unified style */
+    text-align: center; cursor: pointer; overflow: hidden;
+    margin-top: calc(20px * var(--font-scale-factor)); margin-bottom: calc(10px * var(--font-scale-factor));
+    opacity: 0; visibility: hidden; pointer-events: none;
     transition: opacity 0.4s ease-out, visibility 0.4s step-end, margin-top 0.3s ease-out, margin-bottom 0.3s ease-out;
 }
 
-/* --- New Unified Button Styles (Bone White) --- */
-#start-full-btn,
-#start-2025-btn,
-#start-2024-btn,
-#retry-btn,
-#back-to-start-btn,
-#next-btn { /* Target #next-btn ID directly */
-    background-color: #F9F6EE; /* Bone white */
-    color: #333; /* Darker text */
-    border: 1px solid #DCDCDC; /* Light grey border */
-    padding: calc(12px * var(--font-scale-factor)) calc(30px * var(--font-scale-factor)); /* Adjusted padding */
-    text-align: center; /* Ensure text is centered */
-    font-weight: bold; /* Make text slightly bolder */
-    font-size: calc(1.05em * var(--font-scale-factor)); /* Slightly larger font */
-    border-radius: calc(6px * var(--font-scale-factor)); /* Slightly softer corners */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out, opacity 0.4s ease-out, visibility 0.4s step-end; /* Smooth transitions INCLUDING visibility/opacity for next */
-    display: inline-block; /* Ensure proper layout */
-    width: auto; /* Override potential 100% width from .btn */
-    margin-top: calc(10px * var(--font-scale-factor)); /* Adjust vertical spacing */
-    margin-left: calc(5px * var(--font-scale-factor)); /* Add some horizontal space between buttons */
-    margin-right: calc(5px * var(--font-scale-factor));
-    cursor: pointer; /* Ensure cursor is pointer */
-    /* Override any specific blue styles */
-    border-color: #DCDCDC; /* Ensure border is not blue */
+/* Unified Button Styles (Start/Retry/Back) */
+#start-full-btn, #start-2025-btn, #start-2024-btn, #retry-btn, #back-to-start-btn, #next-btn {
+    background-color: #F9F6EE; color: #333; border: 1px solid #DCDCDC;
+    padding: calc(12px * var(--font-scale-factor)) calc(30px * var(--font-scale-factor));
+    text-align: center; font-weight: bold; font-size: calc(1.05em * var(--font-scale-factor));
+    border-radius: calc(6px * var(--font-scale-factor)); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out, opacity 0.4s ease-out, visibility 0.4s step-end;
+    display: inline-block; width: auto;
+    margin-top: calc(10px * var(--font-scale-factor)); margin-left: calc(5px * var(--font-scale-factor)); margin-right: calc(5px * var(--font-scale-factor));
+    cursor: pointer; border-color: #DCDCDC;
 }
+/* Hover, Active, Disabled States for Unified Buttons */
+#start-full-btn:hover:not(.disabled), #start-2025-btn:hover:not(.disabled), #start-2024-btn:hover:not(.disabled), #retry-btn:hover:not(.disabled), #back-to-start-btn:hover:not(.disabled), #next-btn:hover:not(.disabled) { background-color: #E8E4D9; border-color: #C0C0C0; color: #111; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); transform: translateY(-1px); }
+#start-full-btn:active:not(.disabled), #start-2025-btn:active:not(.disabled), #start-2024-btn:active:not(.disabled), #retry-btn:active:not(.disabled), #back-to-start-btn:active:not(.disabled), #next-btn:active:not(.disabled) { background-color: #DCDCDC; border-color: #A9A9A9; transform: translateY(0px); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); }
+#start-full-btn.disabled, #start-2025-btn.disabled, #start-2024-btn.disabled, #retry-btn.disabled, #back-to-start-btn.disabled, #next-btn.disabled { background-color: #EAEAEA !important; color: #999 !important; border-color: #DCDCDC !important; box-shadow: none !important; transform: none !important; pointer-events: none; cursor: default; opacity: 0.65 !important; }
 
-/* --- Hover State (Bone White) --- */
-#start-full-btn:hover:not(.disabled),
-#start-2025-btn:hover:not(.disabled),
-#start-2024-btn:hover:not(.disabled),
-#retry-btn:hover:not(.disabled),
-#back-to-start-btn:hover:not(.disabled),
-#next-btn:hover:not(.disabled) {
-    background-color: #E8E4D9; /* Slightly darker bone white */
-    border-color: #C0C0C0; /* Slightly darker grey border */
-    color: #111; /* Darker text on hover */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
-    transform: translateY(-1px); /* Slight lift */
+/* Next Button Visibility */
+#next-btn { opacity: 0; visibility: hidden; pointer-events: none; }
+#next-btn.visible { opacity: 1; visibility: visible; pointer-events: auto; transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out, opacity 0.4s ease-out, visibility 0s; }
+
+/* Button Feedback Styles & Animations */
+.btn.correct { background-color: #28a745 !important; border-color: #1e7e34 !important; color: white !important; animation: pulse 0.5s; opacity: 1 !important; }
+.btn.incorrect { background-color: #dc3545 !important; border-color: #bd2130 !important; color: white !important; animation: shake 0.5s; opacity: 1 !important; }
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } }
+
+#hud { /* Inside quiz-screen */
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: calc(1em * var(--font-scale-factor)); margin-bottom: calc(20px * var(--font-scale-factor));
+    padding-left: calc(10px * var(--font-scale-factor)); padding-right: calc(10px * var(--font-scale-factor));
+    min-height: calc(1.5em * var(--font-scale-factor)); color: #aaa;
+    transition: font-size 0.3s ease-out, margin-bottom 0.3s ease-out, padding 0.3s ease-out, min-height 0.3s ease-out;
 }
-
-/* --- Active State (Bone White) --- */
-#start-full-btn:active:not(.disabled),
-#start-2025-btn:active:not(.disabled),
-#start-2024-btn:active:not(.disabled),
-#retry-btn:active:not(.disabled),
-#back-to-start-btn:active:not(.disabled),
-#next-btn:active:not(.disabled) {
-    background-color: #DCDCDC; /* Even darker shade */
-    border-color: #A9A9A9; /* Darker border */
-    transform: translateY(0px); /* Press down */
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Reduced shadow */
-}
-
-/* --- Disabled State (Bone White) --- */
-/* This provides the light grey disabled look specifically for these buttons */
-#start-full-btn.disabled,
-#start-2025-btn.disabled,
-#start-2024-btn.disabled,
-#retry-btn.disabled,
-#back-to-start-btn.disabled,
-#next-btn.disabled {
-     background-color: #EAEAEA !important;
-     color: #999 !important;
-     border-color: #DCDCDC !important;
-     box-shadow: none !important;
-     transform: none !important;
-     pointer-events: none; /* Ensure non-clickable */
-     cursor: default;
-     opacity: 0.65 !important; /* Add opacity specifically for these disabled buttons */
-}
-
-
-/* --- Next Button Visibility --- */
-/* Inherits base style from unified rule above */
-/* Ensure visibility transitions correctly */
-#next-btn {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-}
-
-#next-btn.visible {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    /* Transitions handled by unified style, but adjust visibility timing if needed */
-    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out, opacity 0.4s ease-out, visibility 0s; /* Adjust visibility timing */
-}
-
-
-/* --- Button Feedback Styles & Animations (Answer Choices) --- */
-/* Ensure these override base .btn styles */
-.btn.correct {
-    background-color: #28a745 !important;
-    border-color: #1e7e34 !important;
-    color: white !important;
-    animation: pulse 0.5s;
-    opacity: 1 !important; /* Ensure full opacity */
-}
-.btn.incorrect {
-    background-color: #dc3545 !important;
-    border-color: #bd2130 !important;
-    color: white !important;
-    animation: shake 0.5s;
-    opacity: 1 !important; /* Ensure full opacity */
-}
-
-
-/* Pulse & Shake Keyframes (remain the same) */
-@keyframes pulse {
-    0%   { transform: scale(1); }
-    50%  { transform: scale(1.03); }
-    100% { transform: scale(1); }
-}
-@keyframes shake {
-    0%,100% { transform: translateX(0); }
-    25%     { transform: translateX(-5px); }
-    50%     { transform: translateX(5px); }
-    75%     { transform: translateX(-5px); }
-}
-
-#hud {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    /* Scale base font size, margins, padding, min-height */
-    font-size: calc(1em * var(--font-scale-factor));
-    margin-bottom: calc(20px * var(--font-scale-factor));
-    padding-left: calc(10px * var(--font-scale-factor));
-    padding-right: calc(10px * var(--font-scale-factor));
-    min-height: calc(1.5em * var(--font-scale-factor));
-    color: #aaa;
-    transition: font-size 0.3s ease-out, margin-bottom 0.3s ease-out, padding 0.3s ease-out, min-height 0.3s ease-out; /* Add transitions */
-}
-
-#hud p {
-    margin-bottom: 0;
-    padding-top: calc(2px * var(--font-scale-factor));
-    padding-bottom: calc(2px * var(--font-scale-factor));
-    line-height: 1.2; /* Relative line height might not need scaling */
-    font-size: inherit; /* Inherit scaled size from #hud */
-    transition: padding 0.3s ease-out; /* Add padding transition */
-}
-
-#feedback-text {
-    font-weight: bold;
-    font-size: calc(1.1em * var(--font-scale-factor)); /* Scale feedback text size */
-    text-align: right;
-    transition: opacity 0.3s ease-in-out, font-size 0.3s ease-out; /* Added font-size transition */
-}
+#hud p { margin-bottom: 0; padding-top: calc(2px * var(--font-scale-factor)); padding-bottom: calc(2px * var(--font-scale-factor)); line-height: 1.2; font-size: inherit; transition: padding 0.3s ease-out; }
+#feedback-text { font-weight: bold; font-size: calc(1.1em * var(--font-scale-factor)); text-align: right; transition: opacity 0.3s ease-in-out, font-size 0.3s ease-out; }
 #feedback-text.correct { color: #2ecc71; }
 #feedback-text.incorrect { color: #e74c3c; }
 
-/* Utility Class */
 .hidden { display: none !important; }
 
-/* --- Results List Styling --- */
+/* Results List Styling (Inside end-screen) */
 .results-list {
-    margin-top: calc(20px * var(--font-scale-factor)); /* Scale margin */
-    max-height: calc(300px * var(--font-scale-factor)); /* Set a max height for scrollability */
-    overflow-y: auto; /* Enable vertical scrolling */
-    text-align: left; /* Align text left within the list */
-    padding-right: calc(10px * var(--font-scale-factor)); /* Add padding for scrollbar */
-    /* Style the scrollbar */
-    scrollbar-width: thin;
-    scrollbar-color: #555 #333;
-    transition: max-height 0.4s ease-in-out, margin-top 0.3s ease-out, padding-right 0.3s ease-out; /* Add transitions */
+    margin-top: calc(20px * var(--font-scale-factor)); max-height: calc(300px * var(--font-scale-factor));
+    overflow-y: auto; text-align: left; padding-right: calc(10px * var(--font-scale-factor));
+    scrollbar-width: thin; scrollbar-color: #555 #333;
+    transition: max-height 0.4s ease-in-out, margin-top 0.3s ease-out, padding-right 0.3s ease-out;
 }
-
-/* Style for individual result items */
 .result-item {
-    background-color: rgba(40, 40, 40, 0.8);
-    border: 1px solid #444;
-    border-radius: calc(8px * var(--font-scale-factor)); /* Scale border-radius */
-    padding: calc(15px * var(--font-scale-factor)); /* Scale padding */
-    margin-bottom: calc(15px * var(--font-scale-factor)); /* Scale margin */
-    transition: padding 0.3s ease-out, margin-bottom 0.3s ease-out, border-radius 0.3s ease-out; /* Add transitions */
+    background-color: rgba(40, 40, 40, 0.8); border: 1px solid #444; border-radius: calc(8px * var(--font-scale-factor));
+    padding: calc(15px * var(--font-scale-factor)); margin-bottom: calc(15px * var(--font-scale-factor));
+    transition: padding 0.3s ease-out, margin-bottom 0.3s ease-out, border-radius 0.3s ease-out;
 }
+.result-item strong { color: #f5f5f5; font-size: calc(1.1em * var(--font-scale-factor)); display: block; margin-bottom: calc(8px * var(--font-scale-factor)); transition: font-size 0.3s ease-out, margin-bottom 0.3s ease-out; }
+.result-item p { font-size: calc(1em * var(--font-scale-factor)); margin-bottom: calc(5px * var(--font-scale-factor)); color: #ccc; transition: font-size 0.3s ease-out, margin-bottom 0.3s ease-out; }
+.result-item .correct-answer { color: #28a745; font-weight: bold; }
+.result-item .user-answer { font-style: italic; }
+.result-item .user-answer.incorrect { color: #dc3545; font-weight: bold; }
+.results-list::-webkit-scrollbar { width: 8px; }
+.results-list::-webkit-scrollbar-track { background: #333; border-radius: 10px; }
+.results-list::-webkit-scrollbar-thumb { background: #555; border-radius: 10px; }
+.results-list::-webkit-scrollbar-thumb:hover { background: #777; }
 
-.result-item strong {
-    color: #f5f5f5;
-    font-size: calc(1.1em * var(--font-scale-factor)); /* Scale font size */
-    display: block; /* Make question text a block */
-    margin-bottom: calc(8px * var(--font-scale-factor)); /* Space below question */
-    transition: font-size 0.3s ease-out, margin-bottom 0.3s ease-out; /* Add transitions */
-}
-
-.result-item p {
-    font-size: calc(1em * var(--font-scale-factor)); /* Scale font size */
-    margin-bottom: calc(5px * var(--font-scale-factor)); /* Space between answer lines */
-    color: #ccc;
-    transition: font-size 0.3s ease-out, margin-bottom 0.3s ease-out; /* Add transitions */
-}
-
-.result-item .correct-answer {
-    color: #28a745; /* Green for correct answer */
-    font-weight: bold;
-}
-
-.result-item .user-answer {
-    font-style: italic;
-}
-
-.result-item .user-answer.incorrect {
-    color: #dc3545; /* Red for incorrect user answer */
-    font-weight: bold;
-}
-
-/* Custom scrollbar styles for Webkit browsers */
-.results-list::-webkit-scrollbar {
-    width: 8px;
-}
-
-.results-list::-webkit-scrollbar-track {
-    background: #333;
-    border-radius: 10px;
-}
-
-.results-list::-webkit-scrollbar-thumb {
-    background: #555;
-    border-radius: 10px;
-}
-
-.results-list::-webkit-scrollbar-thumb:hover {
-    background: #777;
+/* Start Screen Button Layout (Inside quiz container) */
+#start-screen .btn-stack .btn {
+    width: 80%; max-width: 350px;
+    margin-left: auto; margin-right: auto; display: block;
+    margin-bottom: calc(15px * var(--font-scale-factor)); margin-top: 0;
+    text-align: center;
 }
 
 
-/* --- Optional: Adjust Start Screen Button Layout --- */
-/* This makes the initial three buttons wider and centered */
-#start-screen .btn-stack .btn { /* Make this specific to start screen buttons */
-     width: 80%; /* Make start buttons wider */
-     max-width: 350px; /* Add a max-width */
-     margin-left: auto;
-     margin-right: auto;
-     display: block; /* Stack them vertically cleanly */
-     margin-bottom: calc(15px * var(--font-scale-factor)); /* Space between start buttons */
-     margin-top: 0; /* Reset top margin if needed */
-     text-align: center; /* Ensure text is centered */
-     /* These will inherit the bone-white style from the ID selectors */
-}
-
-
-/* Responsive Adjustments */
-@media (max-width: 600px) {
-    /* Container padding is now handled by the main rule with calc() */
+/* --- Responsive Adjustments --- */
+@media (max-width: 950px) { /* Breakpoint where side-by-side becomes too tight */
+    .main-layout-container {
+        flex-direction: column; /* Stack vertically */
+        align-items: center; /* Center items horizontally when stacked */
+        gap: 30px;
+        max-width: 700px;
+    }
     .quiz-container {
-         /* Adjust base min/max height if needed for small screens */
-         /* max-height: 98vh; */
-         /* min-height: 250px; */
+        max-width: 100%;
+        order: 1; /* Quiz first */
+        flex-basis: auto;
+    }
+    #high-scores-area {
+        max-width: 450px; /* Allow score area to be wider when stacked */
+        width: 90%;
+        order: 2; /* Score panel below quiz */
+        margin-bottom: 20px;
+        flex-basis: auto;
+        /* Now uses same padding as quiz-container, adjusts with scale factor */
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+    .main-layout-container {
+        max-width: 100%;
+        gap: 20px;
+    }
+    .quiz-container,
+    #high-scores-area { /* Apply reduced padding to both */
+        padding: calc(20px * var(--font-scale-factor)) calc(20px * var(--font-scale-factor));
+        min-height: 250px; /* Adjust min height */
+    }
+     #high-scores-area {
+        max-width: 100%;
+        width: 95%;
     }
 
-    /* Optionally adjust base font sizes *before* scaling if needed */
-    /* Example: Make base question text slightly smaller on mobile */
-    /* h2#question-text {
-        font-size: calc(1.2em * var(--font-scale-factor));
-        min-height: calc(50px * var(--font-scale-factor));
-    } */
-    /* Example: Make base button text/padding slightly smaller on mobile */
-    /* .btn {
-        font-size: calc(1em * var(--font-scale-factor));
-        padding: calc(12px * var(--font-scale-factor)) calc(15px * var(--font-scale-factor));
-    } */
+    /* Font sizes inside high-scores-area will now scale via the var */
+    #high-scores-area h2 {
+        font-size: calc(1.3em * var(--font-scale-factor)); /* Example adjustment for smaller screens */
+    }
+     /* Further adjustments if needed based on visual testing */
+}
 
-    /* Adjust unified button padding base on mobile */
-    #start-full-btn,
-    #start-2025-btn,
-    #start-2024-btn,
-    #retry-btn,
-    #back-to-start-btn,
-    #next-btn {
-        padding: calc(10px * var(--font-scale-factor)) calc(20px * var(--font-scale-factor));
-    }
 
-    /* Adjust High Score display on smaller screens */
-    .high-score-entry {
-        font-size: calc(0.9em * var(--font-scale-factor)); /* Slightly smaller text */
-        flex-direction: column; /* Stack elements vertically */
-        align-items: flex-start; /* Align items to the left */
-        border-bottom: 1px dashed #444;
-        padding-bottom: calc(8px * var(--font-scale-factor));
-    }
-    .high-score-entry:last-child {
-        border-bottom: none;
-    }
-     .high-score-entry span, .high-score-entry .stars-container {
-        flex-basis: auto; /* Reset basis */
-        width: 100%; /* Take full width */
-        text-align: left; /* Align text left */
-        margin-left: 0; /* Reset margin */
-        margin-bottom: calc(3px * var(--font-scale-factor)); /* Add spacing */
-    }
-     .high-score-entry .score-text, .high-score-entry .grade-text {
-        text-align: left; /* Align left */
-        display: inline-block; /* Allow side-by-side */
-        width: auto; /* Adjust width */
-        margin-right: calc(10px * var(--font-scale-factor)); /* Space between score and grade */
-    }
-    .high-score-entry .stars-container {
-         margin-top: calc(5px * var(--font-scale-factor)); /* Space above stars */
-    }
+/* Specific Sizing and POSITIONING for High Score Area */
+#high-scores-area {
+    width: 100%;
+    max-width: 300px; /* Adjust if needed */
+    text-align: left;
+    /* Remove min-height or adjust as needed for vertical centering */
+    /* min-height: 300px; */
 
-    /* Adjust HUD padding base values for small screens */
-    /* #hud {
-        padding-left: calc(5px * var(--font-scale-factor));
-        padding-right: calc(5px * var(--font-scale-factor));
-    } */
+    /* --- NEW POSITIONING --- */
+    position: fixed;       /* Position relative to the viewport */
+    top: 50%;              /* Position top edge at the vertical midpoint */
+    right: 10%;            /* Distance from the right edge (e.g., 10% of viewport width) */
+    transform: translateY(-50%); /* Shift element up by half its own height to center it */
+
+    /* --- Keep Existing Styling --- */
+    background-color: rgba(30, 30, 30, 0.9);
+    border: 1px solid #333;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    transition: padding 0.3s ease-out, width 0.3s ease-out, top 0.3s ease-out, right 0.3s ease-out, transform 0.3s ease-out; /* Add transform to transition */
+    overflow: hidden;
+    --font-scale-factor: 1;
+    padding: calc(30px * var(--font-scale-factor)) calc(40px * var(--font-scale-factor));
 }

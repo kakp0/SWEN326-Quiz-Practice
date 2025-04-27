@@ -10,6 +10,11 @@
 <body>
     <div class="main-layout-container">
 
+        <div class="mobile-toggle-container">
+            <button id="show-scoreboard-btn" class="btn">Show Scoreboard</button>
+            <button id="back-to-menu-btn" class="btn">Back to Menu</button>
+        </div>
+
         <div class="quiz-container" id="quiz-container">
 
             <div id="start-screen" class="screen active">
@@ -43,7 +48,8 @@
                 <button id="back-to-start-btn" class="btn">Main Menu</button>
             </div>
 
-        </div><div id="high-scores-area">
+        </div>
+        <div id="high-scores-area">
             <h2>High Scores</h2>
             <div class="high-score-entry" id="high-score-full">
                 <span class="test-title">THE GAUNTLET</span>
@@ -94,7 +100,8 @@
                 </div>
             </div>
 </div> <script src="questions.js"></script>
-        </div></div> <script src="script.js"></script>
+        </div>
+    <script src="script.js"></script>
     <script>
   // This script waits for the entire page (including all assets) to load
   // before attempting to call the displayHighScores function.

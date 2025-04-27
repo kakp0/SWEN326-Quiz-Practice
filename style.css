@@ -70,8 +70,6 @@ body {
     padding: calc(30px * var(--font-scale-factor)) calc(40px * var(--font-scale-factor));
 }
 
-/* REMOVED .scaled-down class styles */
-
 /* Add a class for the shrinking state (if still used for animation) */
 .quiz-container.shrinking {
     max-height: 70px;
@@ -119,6 +117,104 @@ h1 { /* Applies to start/end screens */
     transition: font-size 0.3s ease-out, margin-bottom 0.3s ease-out;
 }
 
+/* --- High Score Area Styling --- */
+#high-scores-area {
+    margin-top: calc(30px * var(--font-scale-factor));
+    padding-top: calc(15px * var(--font-scale-factor));
+    border-top: 1px solid #444;
+    text-align: left;
+}
+
+#high-scores-area h2 {
+    color: #bbb;
+    font-size: calc(1.3em * var(--font-scale-factor));
+    margin-bottom: calc(15px * var(--font-scale-factor));
+    text-align: center;
+}
+
+.high-score-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Distribute space */
+    padding: calc(8px * var(--font-scale-factor)) 0;
+    margin-bottom: calc(5px * var(--font-scale-factor));
+    font-size: calc(1em * var(--font-scale-factor));
+    color: #ccc;
+    flex-wrap: wrap; /* Allow wrapping on small screens if needed */
+}
+
+.high-score-entry span:first-child { /* Label (e.g., "Full Test:") */
+    flex-basis: 120px; /* Give label some fixed space */
+    flex-grow: 0;
+    flex-shrink: 0;
+    font-weight: bold;
+    color: #ddd;
+}
+
+.high-score-entry .score-text {
+    flex-basis: 80px; /* Space for score like "18/25" */
+    text-align: right;
+    color: #fff;
+    font-weight: bold;
+}
+
+.high-score-entry .grade-text {
+    flex-basis: 40px; /* Space for grade like "A+" */
+    text-align: center;
+    color: #fff;
+    font-weight: bold;
+}
+
+.stars-container {
+    display: inline-flex; /* Use inline-flex for stars */
+    align-items: center;
+    margin-left: calc(10px * var(--font-scale-factor)); /* Space before stars */
+    flex-basis: 80px; /* Fixed width for 3 stars */
+    height: calc(20px * var(--font-scale-factor)); /* Star height */
+    background: linear-gradient(to right, gold var(--star-fill-percentage, 0%), rgba(255, 255, 255, 0.2) var(--star-fill-percentage, 0%));
+    clip-path: url(#starClip); /* Apply the star shape mask */
+    -webkit-clip-path: url(#starClip); /* Safari */
+}
+
+/* Define the star shape in SVG (can be hidden in HTML or here) */
+/* You'll need to add the SVG to your HTML for this clip-path to work reliably */
+/* Example SVG (add this within your <body> or a hidden div in index.html):
+<svg width="0" height="0">
+  <defs>
+    <clipPath id="starClip" clipPathUnits="objectBoundingBox">
+       <path d="M0.5,0 L0.61,0.35 L0.98,0.35 L0.68,0.57 L0.79,0.91 L0.5,0.69 L0.21,0.91 L0.32,0.57 L0.02,0.35 L0.39,0.35 Z"/>
+     </clipPath>
+  </defs>
+</svg>
+*/
+
+/* Alternative Star Styling (Simpler using text characters) - Uncomment if SVG clip-path is problematic */
+/*
+.stars-container {
+    display: inline-block;
+    position: relative;
+    font-size: calc(1.5em * var(--font-scale-factor)); /* Adjust size */
+/* line-height: 1;
+    color: rgba(255, 255, 255, 0.2); /* Empty star color */
+/* }
+
+.stars-container::before {
+    content: '★★★'; /* Three empty stars */
+/* }
+
+.stars-container::after {
+    content: '★★★'; /* Three filled stars */
+/* position: absolute;
+    top: 0;
+    left: 0;
+    color: gold;
+    overflow: hidden;
+    width: var(--star-fill-percentage, 0%); /* Control fill */
+/* white-space: nowrap;
+}*/
+/* --- End High Score Area Styling --- */
+
+
 p { /* Base paragraph styling */
     color: #ccc;
     font-size: calc(1.1em * var(--font-scale-factor));
@@ -159,7 +255,7 @@ h2#question-text.text-fade-in {
     transition: opacity 0.3s ease-out, gap 0.3s ease-out, margin-top 0.3s ease-out; /* Added gap/margin transitions */
 }
 
-/* General Button Styling */
+/* General Button Styling (Used for Answer Choices) */
 .btn {
     background-color: #333;
     color: #f0f0f0;
@@ -183,33 +279,37 @@ h2#question-text.text-fade-in {
     transform: translateY(0);
 }
 
-/* Specific Buttons (Start, Retry) */
-#start-btn, #retry-btn {
+/* Modified Disabled Style for General Buttons (Answer Choices) */
+/* Only make buttons non-clickable, don't change visual appearance */
+.btn.disabled {
+    pointer-events: none;
+    /* opacity: 0.65; REMOVED */
+    cursor: default;
+}
+
+/* Specific Buttons (Start, Retry) - ORIGINAL Blue style REMOVED */
+#start-btn, #retry-btn { /* This rule might be redundant now, but kept for structure */
     display: inline-block;
     width: auto;
     /* Use calc for padding, inheriting other scaled properties */
     padding: calc(15px * var(--font-scale-factor)) calc(40px * var(--font-scale-factor));
     text-align: center;
     margin-top: calc(20px * var(--font-scale-factor));
-    background-color: #007bff;
-    border-color: #0056b3;
-    color: white;
-}
-#start-btn:hover, #retry-btn:hover {
-    background-color: #0056b3;
-    border-color: #004085;
+    /* background-color: #007bff; REMOVED */
+    /* border-color: #0056b3; REMOVED */
+    /* color: white; REMOVED */
 }
 
-/* Next Button Specific Styling & Animation */
-.next-btn {
+/* Next Button Specific Styling & Animation - ORIGINAL Blue Style REMOVED */
+.next-btn { /* Base class still used for layout/visibility */
     display: inline-block;
     width: auto;
     /* Use calc for padding/margins, inheriting other scaled properties */
     padding: calc(15px * var(--font-scale-factor)) calc(40px * var(--font-scale-factor));
     text-align: center;
-    background-color: #007bff;
-    border-color: #0056b3;
-    color: white;
+    /* background-color: #007bff; REMOVED */
+    /* border-color: #0056b3; REMOVED */
+    /* color: white; REMOVED */
     cursor: pointer;
     overflow: hidden;
     margin-top: calc(20px * var(--font-scale-factor));
@@ -217,39 +317,118 @@ h2#question-text.text-fade-in {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    /* Keep opacity/visibility transition, others handled by .btn */
+    /* Keep opacity/visibility transition, others handled by new unified style */
     transition: opacity 0.4s ease-out, visibility 0.4s step-end, margin-top 0.3s ease-out, margin-bottom 0.3s ease-out;
 }
-.next-btn.visible {
+
+/* --- New Unified Button Styles (Bone White) --- */
+#start-full-btn,
+#start-2025-btn,
+#start-2024-btn,
+#retry-btn,
+#back-to-start-btn,
+#next-btn { /* Target #next-btn ID directly */
+    background-color: #F9F6EE; /* Bone white */
+    color: #333; /* Darker text */
+    border: 1px solid #DCDCDC; /* Light grey border */
+    padding: calc(12px * var(--font-scale-factor)) calc(30px * var(--font-scale-factor)); /* Adjusted padding */
+    text-align: center; /* Ensure text is centered */
+    font-weight: bold; /* Make text slightly bolder */
+    font-size: calc(1.05em * var(--font-scale-factor)); /* Slightly larger font */
+    border-radius: calc(6px * var(--font-scale-factor)); /* Slightly softer corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out, opacity 0.4s ease-out, visibility 0.4s step-end; /* Smooth transitions INCLUDING visibility/opacity for next */
+    display: inline-block; /* Ensure proper layout */
+    width: auto; /* Override potential 100% width from .btn */
+    margin-top: calc(10px * var(--font-scale-factor)); /* Adjust vertical spacing */
+    margin-left: calc(5px * var(--font-scale-factor)); /* Add some horizontal space between buttons */
+    margin-right: calc(5px * var(--font-scale-factor));
+    cursor: pointer; /* Ensure cursor is pointer */
+    /* Override any specific blue styles */
+    border-color: #DCDCDC; /* Ensure border is not blue */
+}
+
+/* --- Hover State (Bone White) --- */
+#start-full-btn:hover:not(.disabled),
+#start-2025-btn:hover:not(.disabled),
+#start-2024-btn:hover:not(.disabled),
+#retry-btn:hover:not(.disabled),
+#back-to-start-btn:hover:not(.disabled),
+#next-btn:hover:not(.disabled) {
+    background-color: #E8E4D9; /* Slightly darker bone white */
+    border-color: #C0C0C0; /* Slightly darker grey border */
+    color: #111; /* Darker text on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
+    transform: translateY(-1px); /* Slight lift */
+}
+
+/* --- Active State (Bone White) --- */
+#start-full-btn:active:not(.disabled),
+#start-2025-btn:active:not(.disabled),
+#start-2024-btn:active:not(.disabled),
+#retry-btn:active:not(.disabled),
+#back-to-start-btn:active:not(.disabled),
+#next-btn:active:not(.disabled) {
+    background-color: #DCDCDC; /* Even darker shade */
+    border-color: #A9A9A9; /* Darker border */
+    transform: translateY(0px); /* Press down */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Reduced shadow */
+}
+
+/* --- Disabled State (Bone White) --- */
+/* This provides the light grey disabled look specifically for these buttons */
+#start-full-btn.disabled,
+#start-2025-btn.disabled,
+#start-2024-btn.disabled,
+#retry-btn.disabled,
+#back-to-start-btn.disabled,
+#next-btn.disabled {
+     background-color: #EAEAEA !important;
+     color: #999 !important;
+     border-color: #DCDCDC !important;
+     box-shadow: none !important;
+     transform: none !important;
+     pointer-events: none; /* Ensure non-clickable */
+     cursor: default;
+     opacity: 0.65 !important; /* Add opacity specifically for these disabled buttons */
+}
+
+
+/* --- Next Button Visibility --- */
+/* Inherits base style from unified rule above */
+/* Ensure visibility transitions correctly */
+#next-btn {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+#next-btn.visible {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transition: opacity 0.4s ease-out, visibility 0s, margin-top 0.3s ease-out, margin-bottom 0.3s ease-out; /* Adjust visibility timing */
-}
-.next-btn:hover:not(.disabled) {
-     background-color: #0056b3;
-     border-color: #004085;
-     transform: translateY(-2px);
+    /* Transitions handled by unified style, but adjust visibility timing if needed */
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out, opacity 0.4s ease-out, visibility 0s; /* Adjust visibility timing */
 }
 
 
-/* Button Feedback Styles & Animations (remain the same) */
+/* --- Button Feedback Styles & Animations (Answer Choices) --- */
+/* Ensure these override base .btn styles */
 .btn.correct {
     background-color: #28a745 !important;
     border-color: #1e7e34 !important;
-    color: white;
+    color: white !important;
     animation: pulse 0.5s;
+    opacity: 1 !important; /* Ensure full opacity */
 }
 .btn.incorrect {
     background-color: #dc3545 !important;
     border-color: #bd2130 !important;
-    color: white;
+    color: white !important;
     animation: shake 0.5s;
+    opacity: 1 !important; /* Ensure full opacity */
 }
-.btn.disabled {
-    pointer-events: none;
-    opacity: 0.65;
-}
+
 
 /* Pulse & Shake Keyframes (remain the same) */
 @keyframes pulse {
@@ -371,6 +550,21 @@ h2#question-text.text-fade-in {
 }
 
 
+/* --- Optional: Adjust Start Screen Button Layout --- */
+/* This makes the initial three buttons wider and centered */
+#start-screen .btn-stack .btn { /* Make this specific to start screen buttons */
+     width: 80%; /* Make start buttons wider */
+     max-width: 350px; /* Add a max-width */
+     margin-left: auto;
+     margin-right: auto;
+     display: block; /* Stack them vertically cleanly */
+     margin-bottom: calc(15px * var(--font-scale-factor)); /* Space between start buttons */
+     margin-top: 0; /* Reset top margin if needed */
+     text-align: center; /* Ensure text is centered */
+     /* These will inherit the bone-white style from the ID selectors */
+}
+
+
 /* Responsive Adjustments */
 @media (max-width: 600px) {
     /* Container padding is now handled by the main rule with calc() */
@@ -391,9 +585,44 @@ h2#question-text.text-fade-in {
         font-size: calc(1em * var(--font-scale-factor));
         padding: calc(12px * var(--font-scale-factor)) calc(15px * var(--font-scale-factor));
     } */
-    /* #start-btn, #retry-btn, .next-btn {
-        padding: calc(12px * var(--font-scale-factor)) calc(30px * var(--font-scale-factor));
-    } */
+
+    /* Adjust unified button padding base on mobile */
+    #start-full-btn,
+    #start-2025-btn,
+    #start-2024-btn,
+    #retry-btn,
+    #back-to-start-btn,
+    #next-btn {
+        padding: calc(10px * var(--font-scale-factor)) calc(20px * var(--font-scale-factor));
+    }
+
+    /* Adjust High Score display on smaller screens */
+    .high-score-entry {
+        font-size: calc(0.9em * var(--font-scale-factor)); /* Slightly smaller text */
+        flex-direction: column; /* Stack elements vertically */
+        align-items: flex-start; /* Align items to the left */
+        border-bottom: 1px dashed #444;
+        padding-bottom: calc(8px * var(--font-scale-factor));
+    }
+    .high-score-entry:last-child {
+        border-bottom: none;
+    }
+     .high-score-entry span, .high-score-entry .stars-container {
+        flex-basis: auto; /* Reset basis */
+        width: 100%; /* Take full width */
+        text-align: left; /* Align text left */
+        margin-left: 0; /* Reset margin */
+        margin-bottom: calc(3px * var(--font-scale-factor)); /* Add spacing */
+    }
+     .high-score-entry .score-text, .high-score-entry .grade-text {
+        text-align: left; /* Align left */
+        display: inline-block; /* Allow side-by-side */
+        width: auto; /* Adjust width */
+        margin-right: calc(10px * var(--font-scale-factor)); /* Space between score and grade */
+    }
+    .high-score-entry .stars-container {
+         margin-top: calc(5px * var(--font-scale-factor)); /* Space above stars */
+    }
 
     /* Adjust HUD padding base values for small screens */
     /* #hud {

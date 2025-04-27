@@ -593,7 +593,7 @@ const oldQuizData = [
         correctAnswerIndex: 2 // Index 2 corresponds to option C
     },
     {
-        question: "In a '2003' system architecture, what does '2003' stand for?",
+        question: "In a '2oo3' system architecture, what does '2oo3' stand for?",
         answers: [
             "Two out of three components must agree for the system to proceed.",
             "Two out of three attempts to execute a command must succeed.",
@@ -816,7 +816,7 @@ const oldQuizDataTwo = [
         correctAnswerIndex: 1 // Index 1 corresponds to option B
     },
     {
-        question: "In a '2003' system architecture, what does '2003' stand for?",
+        question: "In a '2oo3' system architecture, what does '2oo3' stand for?",
         answers: [
             "The system consists of two operational units and one backup unit.",
             "The system operates on two out of three layers of security.",
@@ -1070,7 +1070,7 @@ const oldQuizDataThree = [
         correctAnswerIndex: 0 // Index 0 corresponds to option A
     },
     {
-        question: "In a '2003' system architecture, what does '2003' stand for?",
+        question: "In a '2oo3' system architecture, what does '2oo3' stand for?",
         answers: [
             "Two out of three attempts to execute a command must succeed.",
             "The system operates on two out of three layers of security.",

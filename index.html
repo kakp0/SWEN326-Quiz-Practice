@@ -95,5 +95,24 @@
             </div>
 </div> <script src="questions.js"></script>
         </div></div> <script src="script.js"></script>
+    <script>
+  // This script waits for the entire page (including all assets) to load
+  // before attempting to call the displayHighScores function.
+  // Place this script tag in your index.html file,
+  // AFTER the line that includes your main script.js file.
+
+  window.onload = function() {
+    // Check if the displayHighScores function exists before calling it,
+    // to prevent errors if script.js hasn't loaded correctly.
+    if (typeof displayHighScores === 'function') {
+      console.log("DEBUG: window.onload fired, calling displayHighScores()");
+      displayHighScores();
+    } else {
+      console.error("Error: displayHighScores function is not defined when window.onload fired.");
+      console.log("Please ensure script.js is loaded correctly before this script.");
+    }
+  };
+</script>
+
 </body>
 </html>

@@ -376,15 +376,40 @@ function showQuestion() {
     questionText.innerText = currentQuestion.question;
     answerButtonsElement.innerHTML = ''; // Clear previous answer buttons
 
-    // Create and display answer buttons
+    // --- NEW LOGIC FOR SHUFFLING ANSWERS ---
+    let shuffledAnswers = [];
+    let newCorrectAnswerIndex = -1;
+
     if (Array.isArray(currentQuestion.answers)) {
-        currentQuestion.answers.forEach((answerText, index) => {
+        // Store the original correct answer text
+        const originalCorrectAnswerText = currentQuestion.answers[currentQuestion.correctAnswerIndex];
+
+        // Create a mutable copy of the answers array
+        shuffledAnswers = [...currentQuestion.answers];
+        shuffleArray(shuffledAnswers); // Shuffle the copy
+
+        // Find the new index of the correct answer in the shuffled array
+        newCorrectAnswerIndex = shuffledAnswers.findIndex(answer => answer === originalCorrectAnswerText);
+
+         // Handle case where original correct answer text was not found after shuffling (shouldn't happen if data is consistent)
+         if (newCorrectAnswerIndex === -1) {
+             console.error("Error: Could not find original correct answer text in shuffled array for question:", currentQuestionIndex, currentQuestion);
+             // Fallback: Use the original index, though this means the correct answer won't be random
+             newCorrectAnswerIndex = currentQuestion.correctAnswerIndex;
+         }
+
+        // Create and display answer buttons using the shuffled answers
+        shuffledAnswers.forEach((answerText, index) => {
             const button = document.createElement('button');
             const letter = String.fromCharCode(65 + index); // A, B, C...
             // Ensure answerText is a string before displaying
             button.innerText = `${letter}) ${typeof answerText === 'string' ? answerText : 'Invalid Option'}`;
             button.classList.add('btn');
-            button.dataset.answerIndex = index; // Store index for checking answer
+            button.dataset.answerIndex = index; // Store the new index for checking answer
+            // Add a data attribute for the correct index for easier lookup in handleAnswerClick
+            if (index === newCorrectAnswerIndex) {
+                 button.dataset.correct = 'true';
+            }
             button.addEventListener('click', handleAnswerClick);
             answerButtonsElement.appendChild(button);
         });
@@ -394,6 +419,8 @@ function showQuestion() {
         questionText.innerText = currentQuestion.question + "\n\n (Error: Answers could not be loaded.)";
          nextBtn.classList.add('visible'); // Allow skipping
     }
+    // --- END NEW LOGIC ---
+
 
     // Manage quiz container height and font size adjustments
     quizContainer.style.maxHeight = 'none'; // Allow height to adjust naturally first
@@ -404,7 +431,7 @@ function showQuestion() {
 
         // Fade in new question content after a slight delay
         setTimeout(() => {
-             questionText.classList.remove('text-fade-out'); // Ensure fade-out class is removed
+             questionText.classList.remove('text-fade-out'); // Ensure fade-in is removed first
              questionText.classList.add('text-fade-in');
              answerButtonsElement.style.opacity = '1';
              feedbackText.style.opacity = '1'; // Also fade in feedback area (even if empty)
@@ -433,6 +460,8 @@ function resetState() {
     Array.from(answerButtonsElement.children).forEach(button => {
         button.classList.remove('correct', 'incorrect', 'disabled');
         button.disabled = false;
+        // Remove the data-correct attribute for the next question
+        button.removeAttribute('data-correct');
     });
 
     // Reset question text animation classes and opacity
@@ -473,7 +502,8 @@ function handleAnswerClick(event) {
     const currentQuestion = questionsToUse[currentQuestionIndex];
 
     // Validate necessary data before proceeding
-    if (!currentQuestion || !Array.isArray(currentQuestion.answers) || typeof currentQuestion.correctAnswerIndex !== 'number' || selectedAnswerIndex === undefined) {
+    // We no longer rely directly on currentQuestion.correctAnswerIndex here for checking correctness
+    if (!currentQuestion || !Array.isArray(currentQuestion.answers) || selectedAnswerIndex === undefined) {
         console.error("Error processing answer click: Invalid question data or selected index.", currentQuestionIndex, currentQuestion);
         // Disable all buttons to prevent further interaction
         Array.from(answerButtonsElement.children).forEach(button => { button.classList.add('disabled'); button.disabled = true; });
@@ -481,12 +511,17 @@ function handleAnswerClick(event) {
         return;
     }
 
-    const correctAnswerIndex = currentQuestion.correctAnswerIndex;
-    const isCorrect = selectedAnswerIndex === correctAnswerIndex;
+    // --- NEW LOGIC FOR CHECKING CORRECT ANSWER ---
+    // Determine if the selected answer is correct using the data-correct attribute
+    const isCorrect = selectedButton.dataset.correct === 'true';
 
-    // Get text for user's answer and correct answer for results log
-    const userAnswerText = currentQuestion.answers[selectedAnswerIndex] || "Invalid Answer Selected";
-    const correctAnswerText = currentQuestion.answers[correctAnswerIndex] || "Correct Answer N/A";
+    // Find the correct answer button to get its text for the results log
+    const correctButton = answerButtonsElement.querySelector('[data-correct="true"]');
+    const correctAnswerText = correctButton ? correctButton.innerText.substring(3).trim() : 'Correct Answer N/A'; // Get text from the correct button
+    const userAnswerText = selectedButton.innerText.substring(3).trim(); // Get text from the selected button, removing "A) " prefix
+
+    // --- END NEW LOGIC ---
+
 
     // Log the result
     quizResults.push({
@@ -500,8 +535,8 @@ function handleAnswerClick(event) {
     Array.from(answerButtonsElement.children).forEach(button => {
         button.classList.add('disabled');
         button.disabled = true;
-        // Highlight the actual correct answer regardless of user choice
-        if (parseInt(button.dataset.answerIndex, 10) === correctAnswerIndex) {
+        // Highlight the actual correct answer regardless of user choice using data-correct
+        if (button.dataset.correct === 'true') {
             button.classList.add('correct');
         }
     });
@@ -516,7 +551,7 @@ function handleAnswerClick(event) {
     } else {
         // If selected button is incorrect, add incorrect styling to it
         selectedButton.classList.add('incorrect'); // Add red color / shake animation
-        const correctLetter = String.fromCharCode(65 + correctAnswerIndex); // Get letter of correct answer
+        const correctLetter = correctButton ? String.fromCharCode(65 + parseInt(correctButton.dataset.answerIndex, 10)) : 'N/A'; // Get letter of correct answer from the correct button's index
         feedbackText.innerText = `Incorrect! Correct answer was ${correctLetter}.`;
         feedbackText.className = 'feedback-text incorrect'; // Add red color class
     }
